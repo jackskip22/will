@@ -1,0 +1,140 @@
+name: conformance
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  vectors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+
+      - name: Conformance vectors (node reference/will.mjs check VECTORS.json)
+        run: node reference/will.mjs check VECTORS.json
+
+      - name: Live-marker lint
+        # Every Markdown file in this repository must parse to zero
+        # regions and zero faults, EXCEPT examples/willed.md — the one
+        # file that is supposed to carry a live Will. This is what keeps
+        # a *quoted* marker in prose (WILL-1.md, README.md, VECTORS.md,
+        # SKILL.md) from ever silently starting to govern this
+        # repository's own text.
+        run: |
+          node --input-type=module -e '
+            import { readFileSync, readdirSync, statSync } from "node:fs";
+            import { join, relative, extname, sep } from "node:path";
+            import { parse } from "./reference/will.mjs";
+
+            const root = process.cwd();
+            const allow = new Set(["examples/willed.md"]);
+            const failures = [];
+
+            function walk(dir) {
+              for (const name of readdirSync(dir)) {
+                if (name === ".git" || name === "node_modules") continue;
+                const full = join(dir, name);
+                const st = statSync(full);
+                if (st.isDirectory()) { walk(full); continue; }
+                if (extname(name) !== ".md") continue;
+                const rel = relative(root, full).split(sep).join("/");
+                const result = parse(readFileSync(full));
+                const live = result.regions.length > 0 || result.faults.length > 0;
+                if (live && !allow.has(rel)) {
+                  failures.push(`${rel}: ${result.regions.length} region(s), ${result.faults.length} fault(s)`);
+                }
+              }
+            }
+            walk(root);
+
+            if (failures.length) {
+              console.error("Live Will markers found outside examples/willed.md:");
+              for (const f of failures) console.error("  " + f);
+              process.exit(1);
+            }
+            console.log("Live-marker lint: clean.");
+          '
+
+  carriers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: "3.11"
+
+      - name: Install pinned dependency versions
+        run: |
+          pip install --quiet \
+            reportlab==5.0.1 \
+            pypdf==6.16.2 \
+            "pdfminer.six==20260107" \
+            python-docx==1.2.0
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            fonts-dejavu-core fonts-wqy-zenhei pandoc poppler-utils
+
+      - name: Regenerate DOCX and compare its hash to examples/README.md
+        run: |
+          cd examples
+          python3 generate_docx.py
+          GOT=$(sha256sum willed.docx | cut -d' ' -f1)
+          WANT=$(sed -n '/^## willed\.docx$/,/^## /p' README.md | grep -oE '[0-9a-f]{64}' | head -1)
+          echo "got:  $GOT"
+          echo "want: $WANT"
+          test "$GOT" = "$WANT"
+
+      - name: Regenerate PDF twins and pin the CONTENT-STREAM hash (not the file hash)
+        # The whole-file sha256 recorded in examples/README.md is NOT
+        # gated on here: it also covers the embedded, subsetted DejaVu
+        # Sans marker font, and a different fonts-dejavu-core package
+        # version can legitimately subset it differently (a different
+        # glyph set, a different internal ordering) without changing
+        # anything this binding governs -- DejaVu subset drift is not
+        # carrier change. What CI actually pins is the sha256 of the
+        # willed page's content stream with every invisible marker text
+        # object stripped out (verify_pdf.py's own _strip_marker_objects,
+        # the same method the structural layout-identity check uses) --
+        # the visible body text, drawn in the base-14 Helvetica font that
+        # is never subsetted, so this hash cannot drift with DejaVu.
+        run: |
+          cd examples
+          python3 generate_pdf.py
+          GOT=$(python3 -c "
+          import hashlib, pypdf
+          import verify_pdf as vp
+          stream = pypdf.PdfReader('willed.pdf').pages[0].get_contents().get_data()
+          print(hashlib.sha256(vp._strip_marker_objects(stream)).hexdigest())
+          ")
+          WANT=$(grep -oE 'content-stream sha256 \(markers stripped\): `[0-9a-f]{64}`' README.md | grep -oE '[0-9a-f]{64}')
+          echo "content-stream got:  $GOT"
+          echo "content-stream want: $WANT"
+          test "$GOT" = "$WANT"
+
+      - name: DOCX dual-vanish structural check + extraction + pandoc round-trip
+        run: |
+          cd examples
+          python3 verify_docx.py
+
+      - name: PDF acceptance battery (governed text, layout identity, Unicode)
+        run: |
+          cd examples
+          python3 verify_pdf.py
+
+      - name: willed.md sha256 matches examples/README.md
+        run: |
+          cd examples
+          GOT=$(sha256sum willed.md | cut -d' ' -f1)
+          WANT=$(sed -n '/^## willed\.md$/,/^## /p' README.md | grep -oE '[0-9a-f]{64}' | head -1)
+          echo "got:  $GOT"
+          echo "want: $WANT"
+          test "$GOT" = "$WANT"
