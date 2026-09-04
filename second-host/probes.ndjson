@@ -1,0 +1,317 @@
+{"id": "utf8-E0-80-80", "kind": "parse", "docBase64": "4ICACg=="}
+{"id": "utf8-C0-80", "kind": "parse", "docBase64": "wIAK"}
+{"id": "utf8-F4-90-80-80", "kind": "parse", "docBase64": "9JCAgAo="}
+{"id": "utf8-ED-A0-80", "kind": "parse", "docBase64": "Qe2ggAo="}
+{"id": "utf8-EF-BB-truncated", "kind": "parse", "docBase64": "77tuCg=="}
+{"id": "utf8-F0-9F-98-then-ED", "kind": "parse", "docBase64": "8J+Y7YAK"}
+{"id": "utf8-E2-82", "kind": "parse", "docBase64": "4oIK"}
+{"id": "utf8-ED-A0", "kind": "parse", "docBase64": "7aAK"}
+{"id": "utf8-ED-BF-BF", "kind": "parse", "docBase64": "7b+/Cg=="}
+{"id": "utf8-F0-90-80", "kind": "parse", "docBase64": "8JCACg=="}
+{"id": "utf8-E0-A0-80-ok", "kind": "parse", "docBase64": "4KCACg=="}
+{"id": "utf8-80-alone", "kind": "parse", "docBase64": "QYBCCg=="}
+{"id": "utf8-C2-41", "kind": "parse", "docBase64": "wkEK"}
+{"id": "utf8-F5-80", "kind": "parse", "docBase64": "9YAK"}
+{"id": "utf8-E0-80-41", "kind": "parse", "docBase64": "4IBBCg=="}
+{"id": "utf8-F0-80-80-80", "kind": "parse", "docBase64": "8ICAgAo="}
+{"id": "law-keep2", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcDIgLS0+Cg=="}
+{"id": "law-ke-ep", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2UgZXAgLS0+Cg=="}
+{"id": "law-10", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgMTAgLS0+Cg=="}
+{"id": "law-empty-dbl", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgIGtlZXAgLS0+Cg=="}
+{"id": "law-none", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgLS0+Cg=="}
+{"id": "law-KEEP", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgS0VFUCAtLT4K"}
+{"id": "law-keep-dash", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcC0gLS0+Cg=="}
+{"id": "law-underscore", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcF9pdCAtLT4K"}
+{"id": "law-unicode", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga8OpZXAgLS0+Cg=="}
+{"id": "law-colon-only", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgOiB4IC0tPgo="}
+{"id": "law-tab", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcAktLT4K"}
+{"id": "ver-1x", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzF4IGtlZXAgLS0+Cg=="}
+{"id": "ver-empty", "kind": "parse", "docBase64": "PCEtLSB3aWxsLyBrZWVwIC0tPgo="}
+{"id": "ver-1-tab", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEJa2VlcCAtLT4K"}
+{"id": "ver-01", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzAxIGtlZXAgLS0+Cg=="}
+{"id": "intent-trailing-space", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcDogeCAgLS0+CkIKPCEtLSAvd2lsbCAtLT4K"}
+{"id": "intent-tab", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcDoJeCAtLT4KQgo8IS0tIC93aWxsIC0tPgo="}
+{"id": "closer-trailing-cr", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KQgo8IS0tIC93aWxsIC0tPg0="}
+{"id": "lone-cr-lines", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4NQg08IS0tIC93aWxsIC0tPg0="}
+{"id": "opener-no-terminator-eof", "kind": "parse", "docBase64": "Qgo8IS0tIHdpbGwvMSBrZWVwIC0tPg=="}
+{"id": "closer-no-terminator-eof", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KQgo8IS0tIC93aWxsIC0tPg=="}
+{"id": "empty-doc", "kind": "parse", "docBase64": ""}
+{"id": "prec-path-vs-malformed", "kind": "evaluate", "splices": [{"start": 3, "end": 1, "insert": "x"}], "path": "reviewing", "before": "Body.\n"}
+{"id": "prec-path-vs-range", "kind": "evaluate", "splices": [{"start": 0, "end": 99, "insert": "x"}], "path": "reviewing", "before": "Body.\n"}
+{"id": "prec-range-vs-overlap", "kind": "evaluate", "splices": [{"start": 0, "end": 99, "insert": "x"}, {"start": 0, "end": 2, "insert": "y"}], "path": "working", "before": "Body.\n"}
+{"id": "prec-malformed-vs-range", "kind": "evaluate", "splices": [{"start": 0, "end": 99, "insert": "x"}, {"start": 5, "end": 2, "insert": "y"}], "path": "working", "before": "Body.\n"}
+{"id": "prec-overlap-vs-malformed", "kind": "evaluate", "splices": [{"start": 0, "end": 3, "insert": "x"}, {"start": 1, "end": 4, "insert": "y"}, {"start": 5, "end": 2, "insert": "z"}], "path": "working", "before": "Body.\n"}
+{"id": "zero-at-end-of-replace", "kind": "evaluate", "splices": [{"start": 0, "end": 3, "insert": "x"}, {"start": 3, "end": 3, "insert": "y"}], "path": "working", "before": "Body.\n"}
+{"id": "zero-at-start-of-replace", "kind": "evaluate", "splices": [{"start": 0, "end": 0, "insert": "x"}, {"start": 0, "end": 3, "insert": "y"}], "path": "working", "before": "Body.\n"}
+{"id": "adjacent-nonzero", "kind": "evaluate", "splices": [{"start": 0, "end": 2, "insert": "x"}, {"start": 2, "end": 4, "insert": "y"}], "path": "working", "before": "Body.\n"}
+{"id": "both-insert-and-b64", "kind": "evaluate", "splices": [{"start": 0, "end": 1, "insert": "x", "insertBase64": "eA=="}], "path": "working", "before": "Body.\n"}
+{"id": "bad-b64", "kind": "evaluate", "splices": [{"start": 0, "end": 1, "insertBase64": "!!"}], "path": "working", "before": "Body.\n"}
+{"id": "extra-key", "kind": "evaluate", "splices": [{"start": 0, "end": 1, "insert": "x", "note": "hi"}], "path": "working", "before": "Body.\n"}
+{"id": "float-offsets", "kind": "evaluate", "splices": [{"start": 0.0, "end": 1, "insert": "x"}], "path": "working", "before": "Body.\n"}
+{"id": "float-offsets-frac", "kind": "evaluate", "splices": [{"start": 0.5, "end": 1, "insert": "x"}], "path": "working", "before": "Body.\n"}
+{"id": "bool-offsets", "kind": "evaluate", "splices": [{"start": false, "end": 1, "insert": "x"}], "path": "working", "before": "Body.\n"}
+{"id": "string-offsets", "kind": "evaluate", "splices": [{"start": "0", "end": 1, "insert": "x"}], "path": "working", "before": "Body.\n"}
+{"id": "negative-start", "kind": "evaluate", "splices": [{"start": -1, "end": 1, "insert": "x"}], "path": "working", "before": "Body.\n"}
+{"id": "path-missing", "kind": "evaluate", "splices": [], "before": "Body.\n"}
+{"id": "path-upper", "kind": "evaluate", "splices": [], "path": "Working", "before": "Body.\n"}
+{"id": "authoring-faulted-before", "kind": "evaluate", "splices": [{"start": 0, "end": 1, "insert": "x"}], "path": "authoring", "before": "<!-- will/1 keep -->\nB\n"}
+{"id": "authoring-invalid-utf8-before", "kind": "evaluate", "splices": [{"start": 0, "end": 1, "insert": "x"}], "path": "authoring", "beforeBase64": "Qf9CCg=="}
+{"id": "authoring-result-invalid", "kind": "evaluate", "splices": [{"start": 0, "end": 1, "insertBase64": "/w=="}], "path": "authoring", "before": "Body.\n"}
+{"id": "authoring-out-of-range", "kind": "evaluate", "splices": [{"start": 0, "end": 99, "insert": "x"}], "path": "authoring", "before": "Body.\n"}
+{"id": "working-result-newfault-vs-law", "kind": "evaluate", "splices": [{"start": 21, "end": 22, "insert": "<!-- /will -->\n"}], "path": "working", "before": "<!-- will/1 keep -->\nB\n<!-- /will -->\n"}
+{"id": "working-two-regions-both-fail", "kind": "evaluate", "splices": [{"start": 21, "end": 22, "insert": "X"}, {"start": 59, "end": 60, "insert": "Y"}], "path": "working", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n<!-- will/1 keep -->\nB\n<!-- /will -->\n"}
+{"id": "working-marker-touch-two-regions", "kind": "evaluate", "splices": [{"start": 60, "end": 61, "insert": "Y"}, {"start": 5, "end": 6, "insert": "X"}], "path": "working", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n<!-- will/1 append -->\nB\n<!-- /will -->\n"}
+{"id": "working-empty-splices-unfaulted", "kind": "evaluate", "splices": [], "path": "working", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n"}
+{"id": "working-splice-in-free-creates-orphan-closer", "kind": "evaluate", "splices": [{"start": 0, "end": 5, "insert": "<!-- /will -->"}], "path": "working", "before": "Free.\n<!-- will/1 keep -->\nA\n<!-- /will -->\n"}
+{"id": "working-insert-zero-at-closer-start-keep", "kind": "evaluate", "splices": [{"start": 23, "end": 23, "insert": "B\n"}], "path": "working", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n"}
+{"id": "working-insert-zero-after-opener-terminator-append", "kind": "evaluate", "splices": [{"start": 23, "end": 23, "insert": "Z\n"}], "path": "working", "before": "<!-- will/1 append -->\nA\n<!-- /will -->\n"}
+{"id": "working-free-edit-and-marker-touch-order", "kind": "evaluate", "splices": [{"start": 0, "end": 4, "insert": "Fr"}, {"start": 8, "end": 9, "insert": "X"}], "path": "working", "before": "Free.\n<!-- will/1 keep -->\nA\n<!-- /will -->\n"}
+{"id": "working-append-then-newline-only", "kind": "evaluate", "splices": [{"start": 25, "end": 25, "insert": "\n"}], "path": "working", "before": "<!-- will/1 append -->\nA\n<!-- /will -->\n"}
+{"id": "working-result-faulted-and-mismatch", "kind": "evaluate", "splices": [{"start": 38, "end": 42, "insert": "<!-- will/1 keep -->"}], "path": "working", "before": "<!-- will/1 edit -->\nA\n<!-- /will -->\nFree\n"}
+{"id": "u-C0-eof", "kind": "parse", "docBase64": "WsA="}
+{"id": "u-C0-41", "kind": "parse", "docBase64": "WsBB"}
+{"id": "u-C0-80", "kind": "parse", "docBase64": "WsCA"}
+{"id": "u-C0-80-41", "kind": "parse", "docBase64": "WsCAQQ=="}
+{"id": "u-C0-80-80", "kind": "parse", "docBase64": "WsCAgA=="}
+{"id": "u-C0-80-80-41", "kind": "parse", "docBase64": "WsCAgEE="}
+{"id": "u-C0-80-80-80", "kind": "parse", "docBase64": "WsCAgIA="}
+{"id": "u-C0-80-80-80-41", "kind": "parse", "docBase64": "WsCAgIBB"}
+{"id": "u-C0-80-80-80-80", "kind": "parse", "docBase64": "WsCAgICA"}
+{"id": "u-C0-80-80-80-80-80", "kind": "parse", "docBase64": "WsCAgICAgA=="}
+{"id": "u-C0-A0-80", "kind": "parse", "docBase64": "WsCggA=="}
+{"id": "u-C0-0A", "kind": "parse", "docBase64": "WsAK"}
+{"id": "u-C0-0A-80", "kind": "parse", "docBase64": "WsAKgA=="}
+{"id": "u-C0-BF", "kind": "parse", "docBase64": "WsC/"}
+{"id": "u-C0-BF-BF", "kind": "parse", "docBase64": "WsC/vw=="}
+{"id": "u-C0-BF-BF-BF", "kind": "parse", "docBase64": "WsC/v78="}
+{"id": "u-C1-eof", "kind": "parse", "docBase64": "WsE="}
+{"id": "u-C1-41", "kind": "parse", "docBase64": "WsFB"}
+{"id": "u-C1-80", "kind": "parse", "docBase64": "WsGA"}
+{"id": "u-C1-80-41", "kind": "parse", "docBase64": "WsGAQQ=="}
+{"id": "u-C1-80-80", "kind": "parse", "docBase64": "WsGAgA=="}
+{"id": "u-C1-80-80-41", "kind": "parse", "docBase64": "WsGAgEE="}
+{"id": "u-C1-80-80-80", "kind": "parse", "docBase64": "WsGAgIA="}
+{"id": "u-C1-80-80-80-41", "kind": "parse", "docBase64": "WsGAgIBB"}
+{"id": "u-C1-80-80-80-80", "kind": "parse", "docBase64": "WsGAgICA"}
+{"id": "u-C1-80-80-80-80-80", "kind": "parse", "docBase64": "WsGAgICAgA=="}
+{"id": "u-C1-A0-80", "kind": "parse", "docBase64": "WsGggA=="}
+{"id": "u-C1-0A", "kind": "parse", "docBase64": "WsEK"}
+{"id": "u-C1-0A-80", "kind": "parse", "docBase64": "WsEKgA=="}
+{"id": "u-C1-BF", "kind": "parse", "docBase64": "WsG/"}
+{"id": "u-C1-BF-BF", "kind": "parse", "docBase64": "WsG/vw=="}
+{"id": "u-C1-BF-BF-BF", "kind": "parse", "docBase64": "WsG/v78="}
+{"id": "u-F5-eof", "kind": "parse", "docBase64": "WvU="}
+{"id": "u-F5-41", "kind": "parse", "docBase64": "WvVB"}
+{"id": "u-F5-80", "kind": "parse", "docBase64": "WvWA"}
+{"id": "u-F5-80-41", "kind": "parse", "docBase64": "WvWAQQ=="}
+{"id": "u-F5-80-80", "kind": "parse", "docBase64": "WvWAgA=="}
+{"id": "u-F5-80-80-41", "kind": "parse", "docBase64": "WvWAgEE="}
+{"id": "u-F5-80-80-80", "kind": "parse", "docBase64": "WvWAgIA="}
+{"id": "u-F5-80-80-80-41", "kind": "parse", "docBase64": "WvWAgIBB"}
+{"id": "u-F5-80-80-80-80", "kind": "parse", "docBase64": "WvWAgICA"}
+{"id": "u-F5-80-80-80-80-80", "kind": "parse", "docBase64": "WvWAgICAgA=="}
+{"id": "u-F5-A0-80", "kind": "parse", "docBase64": "WvWggA=="}
+{"id": "u-F5-0A", "kind": "parse", "docBase64": "WvUK"}
+{"id": "u-F5-0A-80", "kind": "parse", "docBase64": "WvUKgA=="}
+{"id": "u-F5-BF", "kind": "parse", "docBase64": "WvW/"}
+{"id": "u-F5-BF-BF", "kind": "parse", "docBase64": "WvW/vw=="}
+{"id": "u-F5-BF-BF-BF", "kind": "parse", "docBase64": "WvW/v78="}
+{"id": "u-F7-eof", "kind": "parse", "docBase64": "Wvc="}
+{"id": "u-F7-41", "kind": "parse", "docBase64": "WvdB"}
+{"id": "u-F7-80", "kind": "parse", "docBase64": "WveA"}
+{"id": "u-F7-80-41", "kind": "parse", "docBase64": "WveAQQ=="}
+{"id": "u-F7-80-80", "kind": "parse", "docBase64": "WveAgA=="}
+{"id": "u-F7-80-80-41", "kind": "parse", "docBase64": "WveAgEE="}
+{"id": "u-F7-80-80-80", "kind": "parse", "docBase64": "WveAgIA="}
+{"id": "u-F7-80-80-80-41", "kind": "parse", "docBase64": "WveAgIBB"}
+{"id": "u-F7-80-80-80-80", "kind": "parse", "docBase64": "WveAgICA"}
+{"id": "u-F7-80-80-80-80-80", "kind": "parse", "docBase64": "WveAgICAgA=="}
+{"id": "u-F7-A0-80", "kind": "parse", "docBase64": "WveggA=="}
+{"id": "u-F7-0A", "kind": "parse", "docBase64": "WvcK"}
+{"id": "u-F7-0A-80", "kind": "parse", "docBase64": "WvcKgA=="}
+{"id": "u-F7-BF", "kind": "parse", "docBase64": "Wve/"}
+{"id": "u-F7-BF-BF", "kind": "parse", "docBase64": "Wve/vw=="}
+{"id": "u-F7-BF-BF-BF", "kind": "parse", "docBase64": "Wve/v78="}
+{"id": "u-F8-eof", "kind": "parse", "docBase64": "Wvg="}
+{"id": "u-F8-41", "kind": "parse", "docBase64": "WvhB"}
+{"id": "u-F8-80", "kind": "parse", "docBase64": "WviA"}
+{"id": "u-F8-80-41", "kind": "parse", "docBase64": "WviAQQ=="}
+{"id": "u-F8-80-80", "kind": "parse", "docBase64": "WviAgA=="}
+{"id": "u-F8-80-80-41", "kind": "parse", "docBase64": "WviAgEE="}
+{"id": "u-F8-80-80-80", "kind": "parse", "docBase64": "WviAgIA="}
+{"id": "u-F8-80-80-80-41", "kind": "parse", "docBase64": "WviAgIBB"}
+{"id": "u-F8-80-80-80-80", "kind": "parse", "docBase64": "WviAgICA"}
+{"id": "u-F8-80-80-80-80-80", "kind": "parse", "docBase64": "WviAgICAgA=="}
+{"id": "u-F8-A0-80", "kind": "parse", "docBase64": "WviggA=="}
+{"id": "u-F8-0A", "kind": "parse", "docBase64": "WvgK"}
+{"id": "u-F8-0A-80", "kind": "parse", "docBase64": "WvgKgA=="}
+{"id": "u-F8-BF", "kind": "parse", "docBase64": "Wvi/"}
+{"id": "u-F8-BF-BF", "kind": "parse", "docBase64": "Wvi/vw=="}
+{"id": "u-F8-BF-BF-BF", "kind": "parse", "docBase64": "Wvi/v78="}
+{"id": "u-FC-eof", "kind": "parse", "docBase64": "Wvw="}
+{"id": "u-FC-41", "kind": "parse", "docBase64": "WvxB"}
+{"id": "u-FC-80", "kind": "parse", "docBase64": "WvyA"}
+{"id": "u-FC-80-41", "kind": "parse", "docBase64": "WvyAQQ=="}
+{"id": "u-FC-80-80", "kind": "parse", "docBase64": "WvyAgA=="}
+{"id": "u-FC-80-80-41", "kind": "parse", "docBase64": "WvyAgEE="}
+{"id": "u-FC-80-80-80", "kind": "parse", "docBase64": "WvyAgIA="}
+{"id": "u-FC-80-80-80-41", "kind": "parse", "docBase64": "WvyAgIBB"}
+{"id": "u-FC-80-80-80-80", "kind": "parse", "docBase64": "WvyAgICA"}
+{"id": "u-FC-80-80-80-80-80", "kind": "parse", "docBase64": "WvyAgICAgA=="}
+{"id": "u-FC-A0-80", "kind": "parse", "docBase64": "WvyggA=="}
+{"id": "u-FC-0A", "kind": "parse", "docBase64": "WvwK"}
+{"id": "u-FC-0A-80", "kind": "parse", "docBase64": "WvwKgA=="}
+{"id": "u-FC-BF", "kind": "parse", "docBase64": "Wvy/"}
+{"id": "u-FC-BF-BF", "kind": "parse", "docBase64": "Wvy/vw=="}
+{"id": "u-FC-BF-BF-BF", "kind": "parse", "docBase64": "Wvy/v78="}
+{"id": "u-FE-eof", "kind": "parse", "docBase64": "Wv4="}
+{"id": "u-FE-41", "kind": "parse", "docBase64": "Wv5B"}
+{"id": "u-FE-80", "kind": "parse", "docBase64": "Wv6A"}
+{"id": "u-FE-80-41", "kind": "parse", "docBase64": "Wv6AQQ=="}
+{"id": "u-FE-80-80", "kind": "parse", "docBase64": "Wv6AgA=="}
+{"id": "u-FE-80-80-41", "kind": "parse", "docBase64": "Wv6AgEE="}
+{"id": "u-FE-80-80-80", "kind": "parse", "docBase64": "Wv6AgIA="}
+{"id": "u-FE-80-80-80-41", "kind": "parse", "docBase64": "Wv6AgIBB"}
+{"id": "u-FE-80-80-80-80", "kind": "parse", "docBase64": "Wv6AgICA"}
+{"id": "u-FE-80-80-80-80-80", "kind": "parse", "docBase64": "Wv6AgICAgA=="}
+{"id": "u-FE-A0-80", "kind": "parse", "docBase64": "Wv6ggA=="}
+{"id": "u-FE-0A", "kind": "parse", "docBase64": "Wv4K"}
+{"id": "u-FE-0A-80", "kind": "parse", "docBase64": "Wv4KgA=="}
+{"id": "u-FE-BF", "kind": "parse", "docBase64": "Wv6/"}
+{"id": "u-FE-BF-BF", "kind": "parse", "docBase64": "Wv6/vw=="}
+{"id": "u-FE-BF-BF-BF", "kind": "parse", "docBase64": "Wv6/v78="}
+{"id": "u-FF-eof", "kind": "parse", "docBase64": "Wv8="}
+{"id": "u-FF-41", "kind": "parse", "docBase64": "Wv9B"}
+{"id": "u-FF-80", "kind": "parse", "docBase64": "Wv+A"}
+{"id": "u-FF-80-41", "kind": "parse", "docBase64": "Wv+AQQ=="}
+{"id": "u-FF-80-80", "kind": "parse", "docBase64": "Wv+AgA=="}
+{"id": "u-FF-80-80-41", "kind": "parse", "docBase64": "Wv+AgEE="}
+{"id": "u-FF-80-80-80", "kind": "parse", "docBase64": "Wv+AgIA="}
+{"id": "u-FF-80-80-80-41", "kind": "parse", "docBase64": "Wv+AgIBB"}
+{"id": "u-FF-80-80-80-80", "kind": "parse", "docBase64": "Wv+AgICA"}
+{"id": "u-FF-80-80-80-80-80", "kind": "parse", "docBase64": "Wv+AgICAgA=="}
+{"id": "u-FF-A0-80", "kind": "parse", "docBase64": "Wv+ggA=="}
+{"id": "u-FF-0A", "kind": "parse", "docBase64": "Wv8K"}
+{"id": "u-FF-0A-80", "kind": "parse", "docBase64": "Wv8KgA=="}
+{"id": "u-FF-BF", "kind": "parse", "docBase64": "Wv+/"}
+{"id": "u-FF-BF-BF", "kind": "parse", "docBase64": "Wv+/vw=="}
+{"id": "u-FF-BF-BF-BF", "kind": "parse", "docBase64": "Wv+/v78="}
+{"id": "u-E0-eof", "kind": "parse", "docBase64": "WuA="}
+{"id": "u-E0-41", "kind": "parse", "docBase64": "WuBB"}
+{"id": "u-E0-80", "kind": "parse", "docBase64": "WuCA"}
+{"id": "u-E0-80-41", "kind": "parse", "docBase64": "WuCAQQ=="}
+{"id": "u-E0-80-80", "kind": "parse", "docBase64": "WuCAgA=="}
+{"id": "u-E0-80-80-41", "kind": "parse", "docBase64": "WuCAgEE="}
+{"id": "u-E0-80-80-80", "kind": "parse", "docBase64": "WuCAgIA="}
+{"id": "u-E0-80-80-80-41", "kind": "parse", "docBase64": "WuCAgIBB"}
+{"id": "u-E0-80-80-80-80", "kind": "parse", "docBase64": "WuCAgICA"}
+{"id": "u-E0-80-80-80-80-80", "kind": "parse", "docBase64": "WuCAgICAgA=="}
+{"id": "u-E0-A0-80", "kind": "parse", "docBase64": "WuCggA=="}
+{"id": "u-E0-0A", "kind": "parse", "docBase64": "WuAK"}
+{"id": "u-E0-0A-80", "kind": "parse", "docBase64": "WuAKgA=="}
+{"id": "u-E0-BF", "kind": "parse", "docBase64": "WuC/"}
+{"id": "u-E0-BF-BF", "kind": "parse", "docBase64": "WuC/vw=="}
+{"id": "u-E0-BF-BF-BF", "kind": "parse", "docBase64": "WuC/v78="}
+{"id": "u-ED-eof", "kind": "parse", "docBase64": "Wu0="}
+{"id": "u-ED-41", "kind": "parse", "docBase64": "Wu1B"}
+{"id": "u-ED-80", "kind": "parse", "docBase64": "Wu2A"}
+{"id": "u-ED-80-41", "kind": "parse", "docBase64": "Wu2AQQ=="}
+{"id": "u-ED-80-80", "kind": "parse", "docBase64": "Wu2AgA=="}
+{"id": "u-ED-80-80-41", "kind": "parse", "docBase64": "Wu2AgEE="}
+{"id": "u-ED-80-80-80", "kind": "parse", "docBase64": "Wu2AgIA="}
+{"id": "u-ED-80-80-80-41", "kind": "parse", "docBase64": "Wu2AgIBB"}
+{"id": "u-ED-80-80-80-80", "kind": "parse", "docBase64": "Wu2AgICA"}
+{"id": "u-ED-80-80-80-80-80", "kind": "parse", "docBase64": "Wu2AgICAgA=="}
+{"id": "u-ED-A0-80", "kind": "parse", "docBase64": "Wu2ggA=="}
+{"id": "u-ED-0A", "kind": "parse", "docBase64": "Wu0K"}
+{"id": "u-ED-0A-80", "kind": "parse", "docBase64": "Wu0KgA=="}
+{"id": "u-ED-BF", "kind": "parse", "docBase64": "Wu2/"}
+{"id": "u-ED-BF-BF", "kind": "parse", "docBase64": "Wu2/vw=="}
+{"id": "u-ED-BF-BF-BF", "kind": "parse", "docBase64": "Wu2/v78="}
+{"id": "u-F0-eof", "kind": "parse", "docBase64": "WvA="}
+{"id": "u-F0-41", "kind": "parse", "docBase64": "WvBB"}
+{"id": "u-F0-80", "kind": "parse", "docBase64": "WvCA"}
+{"id": "u-F0-80-41", "kind": "parse", "docBase64": "WvCAQQ=="}
+{"id": "u-F0-80-80", "kind": "parse", "docBase64": "WvCAgA=="}
+{"id": "u-F0-80-80-41", "kind": "parse", "docBase64": "WvCAgEE="}
+{"id": "u-F0-80-80-80", "kind": "parse", "docBase64": "WvCAgIA="}
+{"id": "u-F0-80-80-80-41", "kind": "parse", "docBase64": "WvCAgIBB"}
+{"id": "u-F0-80-80-80-80", "kind": "parse", "docBase64": "WvCAgICA"}
+{"id": "u-F0-80-80-80-80-80", "kind": "parse", "docBase64": "WvCAgICAgA=="}
+{"id": "u-F0-A0-80", "kind": "parse", "docBase64": "WvCggA=="}
+{"id": "u-F0-0A", "kind": "parse", "docBase64": "WvAK"}
+{"id": "u-F0-0A-80", "kind": "parse", "docBase64": "WvAKgA=="}
+{"id": "u-F0-BF", "kind": "parse", "docBase64": "WvC/"}
+{"id": "u-F0-BF-BF", "kind": "parse", "docBase64": "WvC/vw=="}
+{"id": "u-F0-BF-BF-BF", "kind": "parse", "docBase64": "WvC/v78="}
+{"id": "u-F4-eof", "kind": "parse", "docBase64": "WvQ="}
+{"id": "u-F4-41", "kind": "parse", "docBase64": "WvRB"}
+{"id": "u-F4-80", "kind": "parse", "docBase64": "WvSA"}
+{"id": "u-F4-80-41", "kind": "parse", "docBase64": "WvSAQQ=="}
+{"id": "u-F4-80-80", "kind": "parse", "docBase64": "WvSAgA=="}
+{"id": "u-F4-80-80-41", "kind": "parse", "docBase64": "WvSAgEE="}
+{"id": "u-F4-80-80-80", "kind": "parse", "docBase64": "WvSAgIA="}
+{"id": "u-F4-80-80-80-41", "kind": "parse", "docBase64": "WvSAgIBB"}
+{"id": "u-F4-80-80-80-80", "kind": "parse", "docBase64": "WvSAgICA"}
+{"id": "u-F4-80-80-80-80-80", "kind": "parse", "docBase64": "WvSAgICAgA=="}
+{"id": "u-F4-A0-80", "kind": "parse", "docBase64": "WvSggA=="}
+{"id": "u-F4-0A", "kind": "parse", "docBase64": "WvQK"}
+{"id": "u-F4-0A-80", "kind": "parse", "docBase64": "WvQKgA=="}
+{"id": "u-F4-BF", "kind": "parse", "docBase64": "WvS/"}
+{"id": "u-F4-BF-BF", "kind": "parse", "docBase64": "WvS/vw=="}
+{"id": "u-F4-BF-BF-BF", "kind": "parse", "docBase64": "WvS/v78="}
+{"id": "u-C2-eof", "kind": "parse", "docBase64": "WsI="}
+{"id": "u-C2-41", "kind": "parse", "docBase64": "WsJB"}
+{"id": "u-C2-80", "kind": "parse", "docBase64": "WsKA"}
+{"id": "u-C2-80-41", "kind": "parse", "docBase64": "WsKAQQ=="}
+{"id": "u-C2-80-80", "kind": "parse", "docBase64": "WsKAgA=="}
+{"id": "u-C2-80-80-41", "kind": "parse", "docBase64": "WsKAgEE="}
+{"id": "u-C2-80-80-80", "kind": "parse", "docBase64": "WsKAgIA="}
+{"id": "u-C2-80-80-80-41", "kind": "parse", "docBase64": "WsKAgIBB"}
+{"id": "u-C2-80-80-80-80", "kind": "parse", "docBase64": "WsKAgICA"}
+{"id": "u-C2-80-80-80-80-80", "kind": "parse", "docBase64": "WsKAgICAgA=="}
+{"id": "u-C2-A0-80", "kind": "parse", "docBase64": "WsKggA=="}
+{"id": "u-C2-0A", "kind": "parse", "docBase64": "WsIK"}
+{"id": "u-C2-0A-80", "kind": "parse", "docBase64": "WsIKgA=="}
+{"id": "u-C2-BF", "kind": "parse", "docBase64": "WsK/"}
+{"id": "u-C2-BF-BF", "kind": "parse", "docBase64": "WsK/vw=="}
+{"id": "u-C2-BF-BF-BF", "kind": "parse", "docBase64": "WsK/v78="}
+{"id": "u-DF-eof", "kind": "parse", "docBase64": "Wt8="}
+{"id": "u-DF-41", "kind": "parse", "docBase64": "Wt9B"}
+{"id": "u-DF-80", "kind": "parse", "docBase64": "Wt+A"}
+{"id": "u-DF-80-41", "kind": "parse", "docBase64": "Wt+AQQ=="}
+{"id": "u-DF-80-80", "kind": "parse", "docBase64": "Wt+AgA=="}
+{"id": "u-DF-80-80-41", "kind": "parse", "docBase64": "Wt+AgEE="}
+{"id": "u-DF-80-80-80", "kind": "parse", "docBase64": "Wt+AgIA="}
+{"id": "u-DF-80-80-80-41", "kind": "parse", "docBase64": "Wt+AgIBB"}
+{"id": "u-DF-80-80-80-80", "kind": "parse", "docBase64": "Wt+AgICA"}
+{"id": "u-DF-80-80-80-80-80", "kind": "parse", "docBase64": "Wt+AgICAgA=="}
+{"id": "u-DF-A0-80", "kind": "parse", "docBase64": "Wt+ggA=="}
+{"id": "u-DF-0A", "kind": "parse", "docBase64": "Wt8K"}
+{"id": "u-DF-0A-80", "kind": "parse", "docBase64": "Wt8KgA=="}
+{"id": "u-DF-BF", "kind": "parse", "docBase64": "Wt+/"}
+{"id": "u-DF-BF-BF", "kind": "parse", "docBase64": "Wt+/vw=="}
+{"id": "u-DF-BF-BF-BF", "kind": "parse", "docBase64": "Wt+/v78="}
+{"id": "path-missing-marker-touch", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n", "splices": [{"start": 0, "end": 1, "insert": "x"}]}
+{"id": "path-null-marker-touch", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n", "splices": [{"start": 0, "end": 1, "insert": "x"}], "path": null}
+{"id": "path-empty-string", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n", "splices": [{"start": 0, "end": 1, "insert": "x"}], "path": ""}
+{"id": "both-forms-differ", "kind": "evaluate", "before": "Body.\n", "splices": [{"start": 0, "end": 1, "insert": "x", "insertBase64": "eQ=="}], "path": "working"}
+{"id": "both-forms-differ-keep", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n", "splices": [{"start": 21, "end": 22, "insert": "A", "insertBase64": "Qg=="}], "path": "working"}
+{"id": "both-forms-differ-keep2", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n", "splices": [{"start": 21, "end": 22, "insert": "B", "insertBase64": "QQ=="}], "path": "working"}
+{"id": "float-end", "kind": "evaluate", "before": "Body.\n", "splices": [{"start": 0, "end": 1.0, "insert": "x"}], "path": "working"}
+{"id": "big-int", "kind": "evaluate", "before": "Body.\n", "splices": [{"start": 0, "end": 1, "insert": "x"}, {"start": 1000.0, "end": 1000.0, "insert": "y"}], "path": "working"}
+{"id": "start-1e0", "kind": "evaluate", "before": "Body.\n", "splices": [{"start": 1.0, "end": 2, "insert": "x"}], "path": "working"}
+{"id": "touch-order-array", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n<!-- will/1 append -->\nB\n<!-- /will -->\n", "splices": [{"start": 5, "end": 6, "insert": "X"}, {"start": 60, "end": 61, "insert": "Y"}], "path": "working"}
+{"id": "touch-vs-law-order", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n<!-- will/1 keep -->\nB\n<!-- /will -->\n", "splices": [{"start": 59, "end": 60, "insert": "Y"}, {"start": 5, "end": 6, "insert": "X"}], "path": "working"}
+{"id": "law-order-array", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\n<!-- will/1 keep -->\nB\n<!-- /will -->\n", "splices": [{"start": 59, "end": 60, "insert": "Y"}, {"start": 21, "end": 22, "insert": "X"}], "path": "working"}
+{"id": "mismatch-vs-law", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\nFree\n", "splices": [{"start": 21, "end": 22, "insert": "X"}, {"start": 38, "end": 42, "insert": "<!-- will/1 keep -->\nQ\n<!-- /will -->"}], "path": "working"}
+{"id": "resultfault-vs-law", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\nFree\n", "splices": [{"start": 21, "end": 22, "insert": "X"}, {"start": 38, "end": 42, "insert": "<!-- /will -->"}], "path": "working"}
+{"id": "resultutf8-vs-law", "kind": "evaluate", "before": "<!-- will/1 keep -->\nA\n<!-- /will -->\nFree\n", "splices": [{"start": 21, "end": 22, "insert": "X"}, {"start": 38, "end": 42, "insertBase64": "/w=="}], "path": "working"}
+{"id": "resultutf8-vs-mismatch", "kind": "evaluate", "before": "<!-- will/1 edit -->\nA\n<!-- /will -->\nFree\n", "splices": [{"start": 38, "end": 42, "insert": "<!-- will/1 keep -->\nQ\n<!-- /will -->"}, {"start": 21, "end": 22, "insertBase64": "/w=="}], "path": "working"}
+{"id": "bogus-unspaced", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgYm9ndXM6dW5zcGFjZWQgLS0+Cg=="}
+{"id": "bogus-empty-intent", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgYm9ndXM6ICAtLT4K"}
+{"id": "bogus-junk", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgYm9ndXMgLS0+IHgK"}
+{"id": "ver2-none", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzIgLS0+Cg=="}
+{"id": "bogus-dashdash", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgYm9ndXM6IGEgLS0gYiAtLT4K"}
+{"id": "keep-513-junk", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEga2VlcDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4IC0tPiBqCg=="}
+{"id": "bogus-tab", "kind": "parse", "docBase64": "PCEtLSB3aWxsLzEgYm9ndXMJLS0+Cg=="}

@@ -1,0 +1,15 @@
+# Differential (adapter protocol, black-box)
+
+This host, `reference/will.mjs --adapter`, and `second-host/will.py --adapter`
+were driven over identical fixtures. None of the three source files was
+opened; comparison is object-for-object on `{id, kind, result}`.
+
+## seed=1, 3000 generated + 97 vectors
+
+- go vs reference: 0 disagreements in 0 shapes
+- go vs second-host: 0 disagreements in 0 shapes
+- reference vs second-host: 0 disagreements in 0 shapes
+
+## seed=2, 3000 generated (vs reference)
+
+- go vs reference: 3000 / 3000 agree
