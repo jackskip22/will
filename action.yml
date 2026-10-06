@@ -1,0 +1,17 @@
+name: Will
+description: Refuse a pull request that changes a region its document marks keep, or rewrites one marked append.
+branding: {icon: lock, color: gray-dark}
+inputs:
+  base:
+    description: The commit the pull request is judged against.
+    default: ${{ github.event.pull_request.base.sha }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        node-version: 22
+    - shell: bash
+      env:
+        BASE: ${{ inputs.base }}
+      run: node "$GITHUB_ACTION_PATH/will.mjs" pr "$BASE"

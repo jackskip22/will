@@ -1,0 +1,19 @@
+name: conformance
+on: [push, pull_request]
+jobs:
+  vectors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: node will.mjs check vectors.json
+      - name: no live marker in the README (a quoted marker is indented)
+        run: |
+          node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            import {parse} from "./will.mjs";
+            const r = parse(readFileSync("README.md"));
+            if (r.regions.length || r.faults.length) { console.error("README.md carries a live will:", r); process.exit(1); }
+            console.log("README.md: no live marker");'
