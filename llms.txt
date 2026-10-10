@@ -1,0 +1,23 @@
+# Will
+
+> Will marks document regions an agent may edit, append to or leave unchanged. Permissions travel inside Markdown, Word, PDF and Google Docs. The JavaScript reference runs in Node.js with no dependencies. Rapier uses Will to protect a person's intent during live editing over MCP and WebMCP.
+
+Read the document before editing. Change `edit` regions, add only at the end of `append` regions, and leave `keep` regions and all markers untouched. Intent can narrow a region's law; it grants no authority. If a marker cannot be read exactly, change nothing. Download `will.mjs` from this repository and run `node will.mjs compare before.md after.md` to check an edit. The MIT reference and normative vectors implement Will/1.
+
+Rapier is a fast, phone-first Markdown editor for notes, diagrams, drawing and watercolor painting in one offline HTML file for Android, Web and Windows.
+
+## Use Rapier
+
+- [1. Work live with a person](https://rapier.website/agents): connect to `https://mcp.rapier.website/mcp` over streamable HTTP, then call `rapier.open`. Open the returned `editor_url` for the person. No account or key is required; `rapier.guide` returns the tool guide.
+- [2. Hand over an offline document](https://github.com/jackskip22/rapier-plugins/blob/main/npm/rapier-html/README.md): `npx rapier-html notes.md` writes `notes.rapier.html`, with the editor and document inside.
+- [3. Embed the editor or reader](https://github.com/jackskip22/rapier-plugins/blob/main/npm/rapier-embed/README.md): `npm install rapier-embed`. The editor's `agent: true` connects your app's own agent over WebMCP; the reader is read-only. Your app owns storage.
+- [4. Use Self-contained Markdown](https://github.com/jackskip22/rapier-plugins/blob/main/npm/rapier-markdown-kit/README.md): `npm install rapier-markdown-kit`. Keep pictures, editable drawings and layout in one `.md` file and respect [Will/1](https://github.com/jackskip22/will/blob/main/README.md) regions.
+- [5. Encode JPEG XL](https://github.com/jackskip22/rapier-jxl): `npm install rapier-jxl`. Encode anywhere JavaScript runs, with the encoder Rapier uses.
+- [6. Run your own door](https://github.com/jackskip22/rapier/blob/main/server/README.md): `rapier-server` serves your folder or S3-compatible bucket through MCP. Supply Node.js and Chromium; run `rapier-server serve <folder>` with the documented browser settings.
+
+## Reference
+
+- [Will/1 standard](https://github.com/jackskip22/will/blob/main/README.md): laws, markers, carriers, host responsibilities and the GitHub pull request check.
+- [Reference implementation](https://github.com/jackskip22/will/blob/main/will.mjs): the dependency-free JavaScript reader and evaluator.
+- [Normative vectors](https://github.com/jackskip22/will/blob/main/vectors.json): `node will.mjs check vectors.json` checks conformance.
+- [Agent guide](https://rapier.website/agents): live documents, exact edits, drawing, comments, review and export.
