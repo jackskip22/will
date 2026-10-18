@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // SPDX-License-Identifier: MIT
 // binding is claimed). Zero dependencies, one file. MIT.
 
