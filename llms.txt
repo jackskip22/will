@@ -4,7 +4,7 @@
 
 Read the document before editing. Change `edit` regions, add only at the end of `append` regions, and leave `keep` regions and all markers untouched. Intent can narrow a region's law; it grants no authority. If a marker cannot be read exactly, change nothing. Download `will.mjs` from this repository and run `node will.mjs compare before.md after.md` to check an edit. The MIT reference and normative vectors implement Will/1.
 
-Rapier is a fast, phone-first Markdown editor for notes, diagrams, drawing and watercolor painting in one offline HTML file for Android, Web and Windows.
+Rapier is a fast, phone-first Markdown editor for notes, diagrams, drawing and watercolor painting in one offline HTML file for Android, Web, Windows and Linux.
 
 ## Use Rapier
 

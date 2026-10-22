@@ -6,7 +6,7 @@ with no dependencies.
 
 [Rapier](https://rapier.website) uses Will for live editing with agents over MCP and WebMCP. Rapier is a fast,
 phone-first Markdown editor for notes, diagrams, drawing and watercolor painting, in one offline HTML file for
-Android, Web and Windows.
+Android, Web, Windows and Linux.
 
 - Markdown uses hidden comment lines. DOCX, PDF and Google Docs use their own carriers.
 - An unreadable marker makes the whole document `keep`.
