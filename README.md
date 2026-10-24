@@ -1,5 +1,15 @@
 # Will
 
+Will marks what in a document an agent may edit, add to or leave alone.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jackskip22/will/main/assets/write-1280-dark.png">
+  <img src="https://raw.githubusercontent.com/jackskip22/will/main/assets/write-1280-light.png" alt="An agent's change marked in Rapier, ready for the person to undo" width="960">
+</picture>
+
+Try it: connect an agent to [Rapier](https://rapier.website) and mark a region `keep`.
+Install: download `will.mjs` and run `node will.mjs compare before.md after.md`.
+
 Will marks which document regions an agent may edit, append to or leave unchanged. Permissions travel inside
 Markdown, Word, PDF and Google Docs, with no registry, sidecar or account. The JavaScript reference runs in Node.js
 with no dependencies.
