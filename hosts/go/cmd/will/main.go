@@ -90,6 +90,7 @@ func adapter(input io.Reader, output io.Writer) error {
 				bad = true
 				result = map[string]string{"error": "invalid_request"}
 			} else {
+				// Exact keys, as RunCase read them: a struct would also match "ID" or "Kind".
 				var request map[string]json.RawMessage
 				if err := json.Unmarshal(line, &request); err != nil {
 					return err

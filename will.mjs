@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT
+// binding is claimed). Zero dependencies, one file. MIT.
 
 import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
 
 const LAWS = new Set(['edit', 'append', 'keep']);
 const OPENER_PREFIX = '<!-- will/';
@@ -396,7 +398,7 @@ export function compare(beforeInput, afterInput) {
 
 function pullRequest(base) {
   const git = (...args) => execFileSync('git', args, { maxBuffer: 1 << 30 });
-  const listed = git('diff', '--name-status', '-z', '-M', base, 'HEAD', '--', '*.md', '*.markdown').toString('utf8').split('\0');
+  const listed = git('diff', '--name-status', '-z', '-M', base, 'HEAD', '--', ':(icase)*.md', ':(icase)*.markdown').toString('utf8').split('\0');
   let refused = 0;
   const say = (file, line, words) => { refused++; process.stdout.write('::error file=' + file + (line ? ',line=' + line : '') + '::' + words + '\n'); };
   for (let i = 0; i < listed.length - 1;) {
@@ -513,7 +515,7 @@ function readBytesArg(pathArg) {
 }
 
 const argv = process.argv.slice(2);
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   if (argv[0] === 'parse' && argv[1]) {
     console.log(JSON.stringify(parse(readBytesArg(argv[1])), null, 2));
   } else if (argv[0] === 'evaluate' && argv[1] && argv[2]) {

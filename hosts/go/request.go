@@ -12,8 +12,10 @@ import (
 	"unicode/utf8"
 )
 
+// ErrInvalidRequest means the JSON request or its document bytes could not be read.
 var ErrInvalidRequest = errors.New("invalid request")
 
+// RunCase reads one JSON parse or evaluate request and returns its normalized result.
 func RunCase(raw json.RawMessage) (any, error) {
 	if !utf8.Valid(raw) || !json.Valid(raw) {
 		return nil, ErrInvalidRequest
@@ -120,6 +122,7 @@ func readSplices(raw json.RawMessage, length int) ([]Splice, string) {
 	return splices, ""
 }
 
+// Decimal offsets remain exact without allocating a power of ten.
 type decimalInteger struct {
 	digits string
 	zeros  big.Int
@@ -202,6 +205,7 @@ func (number decimalInteger) intValue() int {
 	return value
 }
 
+// encoding/json replaces malformed Unicode, so check scalars before decoding.
 func scalarJSON(raw []byte) bool {
 	if !utf8.Valid(raw) || !json.Valid(raw) {
 		return false

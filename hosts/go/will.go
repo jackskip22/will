@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+// Package will reads and evaluates the Will/1 Markdown binding.
 package will
 
 import (
@@ -8,19 +9,23 @@ import (
 	"unicode/utf8"
 )
 
+// Span is a zero-based, half-open byte range.
 type Span [2]int
 
+// Marker includes the line terminator in its byte span.
 type Marker struct {
 	Line     int  `json:"line"`
 	ByteSpan Span `json:"byteSpan"`
 }
 
+// Fault identifies a document error. Line is nil for an invalid UTF-8 sequence.
 type Fault struct {
 	Mode     string `json:"mode"`
 	Line     *int   `json:"line"`
 	ByteSpan Span   `json:"byteSpan"`
 }
 
+// Region is the content between one complete marker pair.
 type Region struct {
 	Index        int     `json:"index"`
 	Law          string  `json:"law"`
@@ -30,18 +35,21 @@ type Region struct {
 	GovernedSpan Span    `json:"governedSpan"`
 }
 
+// Document is the normalized parse result, including completed regions on a faulted document.
 type Document struct {
 	Faulted bool     `json:"faulted"`
 	Faults  []Fault  `json:"faults"`
 	Regions []Region `json:"regions"`
 }
 
+// Splice replaces bytes in the unchanged source document.
 type Splice struct {
 	Start  int
 	End    int
 	Insert []byte
 }
 
+// Decision is the complete evaluation response.
 type Decision struct {
 	Outcome string  `json:"outcome"`
 	Reason  string  `json:"reason,omitempty"`
@@ -51,6 +59,7 @@ type Decision struct {
 	Faults  []Fault `json:"faults,omitempty"`
 }
 
+// Parse reads strict UTF-8 bytes without normalizing text or line endings.
 func Parse(source []byte) Document {
 	document := Document{Faults: []Fault{}, Regions: []Region{}}
 	if bad := invalidUTF8(source); bad != nil {
@@ -198,6 +207,7 @@ func markerSurvives(source, result []byte, before, after Marker, splices []Splic
 		}
 		start += len(splice.Insert) - (splice.End - splice.Start)
 	}
+	// Inserted marker copies cannot stand in for surviving source markers.
 	span := Span{start, start + before.ByteSpan[1] - before.ByteSpan[0]}
 	return after.ByteSpan == span && bytes.Equal(source[before.ByteSpan[0]:before.ByteSpan[1]], result[span[0]:span[1]])
 }
@@ -263,6 +273,8 @@ func lawSeparator(scalar rune) bool {
 	}
 }
 
+// Evaluate judges all splices against the unchanged source as one act.
+// A nil splice slice is invalid; use an empty slice for an empty act.
 func Evaluate(source []byte, splices []Splice, path string) Decision {
 	if path != "working" && path != "authoring" {
 		return invalid("unknown_path")

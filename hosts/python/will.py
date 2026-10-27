@@ -243,6 +243,7 @@ class _Offset:
         return self.digits.ljust(width, "0") < other.digits.ljust(width, "0")
 
     def bounded_int(self) -> int:
+        # The caller has already bounded this value by the document byte length.
         return int(self.digits + "0" * self.zeros)
 
 
