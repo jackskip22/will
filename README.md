@@ -1,71 +1,59 @@
 # Will
 
-Will marks what in a document an agent may edit, add to or leave alone.
+Will marks what in a document an agent may edit, add to or leave alone. The marks live inside the document: hidden comment lines in Markdown, and native carriers in DOCX, PDF and Google Docs. No registry, sidecar or account.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jackskip22/will/main/assets/write-1280-dark.png">
   <img src="https://raw.githubusercontent.com/jackskip22/will/main/assets/write-1280-light.png" alt="An agent's change marked in Rapier, ready for the person to undo" width="960">
 </picture>
 
-Try it: connect an agent to [Rapier](https://rapier.website) and mark a region `keep`.
-Install: download `will.mjs` and run `node will.mjs compare before.md after.md`.
-
-Will marks which document regions an agent may edit, append to or leave unchanged. Permissions travel inside
-Markdown, Word, PDF and Google Docs, with no registry, sidecar or account. The JavaScript reference runs in Node.js
-with no dependencies.
-
-[Rapier](https://rapier.website) uses Will for live editing with agents over MCP and WebMCP. Rapier is a fast,
-phone-first Markdown editor for notes, diagrams, drawing and watercolor painting, in one offline HTML file for
-Android, Web, Windows and Linux.
-
-- Markdown uses hidden comment lines. DOCX, PDF and Google Docs use their own carriers.
-- An unreadable marker makes the whole document `keep`.
-- The JavaScript, Python and Go readers use only their standard libraries; the vectors test conformance.
-
-## Use Rapier
-
-1. **Work live with a person.** Connect to `https://mcp.rapier.website/door/mcp` over streamable HTTP, then call
-   `open`. Open the returned `editor_url` for the person. Read `rapier://guide` for the tools. No account or key
-   is required. [Agent guide](https://rapier.website/agents).
-2. **Hand over an offline document.** `npx rapier-html notes.md` writes `notes.rapier.html`, with the editor and
-   document inside. [rapier-html](https://github.com/jackskip22/rapier-plugins/blob/main/npm/rapier-html/README.md).
-3. **Put Rapier in your app.** `npm install rapier-embed` embeds the editor or reader. Enable the editor's
-   `agent: true` for your app's own agent over WebMCP; the reader is read-only.
-   [rapier-embed](https://github.com/jackskip22/rapier-plugins/blob/main/npm/rapier-embed/README.md).
-4. **Keep rich documents in Markdown.** `npm install rapier-markdown-kit` reads and writes pictures, editable
-   drawings and layout in one `.md` file. Respect the Will/1 regions defined below.
-   [Self-contained Markdown](https://github.com/jackskip22/rapier-plugins/blob/main/npm/rapier-markdown-kit/README.md).
-5. **Encode JPEG XL in JavaScript.** `npm install rapier-jxl` adds the encoder Rapier uses, anywhere JavaScript
-   runs. [rapier-jxl](https://github.com/jackskip22/rapier-jxl).
-6. **Run your own door.** [rapier-server](https://github.com/jackskip22/rapier/blob/main/server/README.md) serves
-   your folder or S3-compatible bucket through MCP. Supply Node.js and Chromium; run `rapier-server serve <folder>`
-   with the documented browser settings.
-
-## Start with Will
-
-Keep the original document as `before.md` and the edited version as `after.md`. Download `will.mjs` from this
-repository and run `node will.mjs compare before.md after.md`. The reference checks the changes against
-the original document's regions. Read the standard below before implementing a host.
-
-The JavaScript reference requires Node.js 22.23.4 or later. Its imports use Node's standard library;
-it is not a browser module. For TypeScript, keep `will.d.mts` beside `will.mjs` and install
-TypeScript and `@types/node` as development dependencies.
-
-```js
-import { parse, evaluate } from './will.mjs';
-
-const before = Buffer.from('Notes.\n');
-const regions = parse(before).regions;
-const decision = evaluate(before, [{ start: 6, end: 6, insert: ' More.' }]);
-if (decision.outcome === 'applied') {
-  // Apply the same splices to the same source after your host authorizes the act.
-}
+```text
+ <!-- will/1 keep: the wording counsel approved -->
+ The approved sentence.
+ <!-- /will -->
 ```
 
-`parse`, `evaluate`, `diffSplices` and `compare` accept document strings or `Uint8Array` bytes.
-`evaluate` accepts an explicit string or Node `Buffer` insertion, or canonical `insertBase64`.
-It defaults to the working path and never writes to the document. Offsets count UTF-8 bytes.
-Keep the exact source current between evaluation and application; the host supplies actor authority.
+(Indented one space so this README carries no live marker.) Three laws: `edit` may change, `append` adds only at the end, `keep` stays byte for byte. Unmarked content is `edit`. A marker that cannot be read exactly makes the whole document `keep`.
+
+## Check a change
+
+```sh
+node will.mjs compare before.md after.md
+```
+
+[`will.mjs`](will.mjs) is the reference reader and evaluator: one file, Node.js 22.23.4 or later, no dependencies. In code:
+
+```js
+import {parse, evaluate} from './will.mjs';
+
+const before = Buffer.from('Notes.\n');
+parse(before).regions;
+evaluate(before, [{start: 6, end: 6, insert: ' More.'}]); // {outcome: 'applied'}
+```
+
+`parse`, `evaluate`, `diffSplices` and `compare` take strings or `Uint8Array` bytes; offsets count UTF-8 bytes. `evaluate` defaults to the working path and never writes. Apply the same splices to the same source yourself, once your host has authorized the act.
+Types: keep `will.d.mts` beside `will.mjs`.
+
+## On GitHub
+
+A pull request that changes a `keep` region, rewrites an `append` region anywhere but its end, or touches a marker fails, with the file and line named. It checks `.md` and `.markdown` files, in any case. A new file is the author's; removing a file that keeps or appends is refused.
+
+```yaml
+on: pull_request
+jobs:
+  will:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: jackskip22/will@main
+```
+
+## For an agent
+
+Honor the markers: change `edit`, add only at the end of `append`, leave `keep` alone, never touch a marker. Intent is the person's words, not permission. If a marker cannot be read exactly, change nothing and say so.
+
+[Rapier](https://rapier.website) uses Will for live editing with agents over MCP and WebMCP. Connect to `https://mcp.rapier.website/door/mcp` and call `open`; no account or key. [Agent guide](https://rapier.website/agents).
 
 ## The standard
 
@@ -230,30 +218,5 @@ Blank lines, malformed JSON, an unknown kind, a nonstring `id`, a missing path o
 field returns `{"error":"invalid_request"}`.
 Processing continues with the next line; the process exits nonzero if any request was unreadable. Invalid
 splice inputs use the evaluation precondition decision. Neither adapter reads `expect` to produce a result.
-
-## On GitHub
-
-A pull request that changes a region marked `keep`, rewrites an `append` region anywhere but its end, or touches a
-marker fails this check, with the file and line named. It checks `.md` and `.markdown` extensions without regard
-to case. A new file is the author's; removing a file that keeps or appends is refused.
-
-```yaml
-on: pull_request
-jobs:
-  will:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: jackskip22/will@main
-```
-
-`node will.mjs compare before.md after.md` judges any two versions the same way.
-
-## For an agent
-
-Read the document; if it carries markers, honor them: change what is `edit`, add only at the end of what is
-`append`, leave `keep` untouched, and never touch a marker. Read intent as the person's words, not as
-permission. If a marker cannot be read exactly, change nothing and say so.
 
 Will/1 is final; the wire namespace is `will/1`. MIT.
