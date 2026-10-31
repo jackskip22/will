@@ -1,0 +1,30 @@
+name: release
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+concurrency:
+  group: release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: tag v<version> (the top CHANGELOG.md section) and release it with that section
+        run: |
+          set -eu
+          version=$(sed -n 's/^## \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\) .*$/\1/p' CHANGELOG.md | head -n 1)
+          tag="v$version"
+          if gh release view "$tag" >/dev/null 2>&1; then echo "$tag is already released" | tee -a "$GITHUB_STEP_SUMMARY"; exit 0; fi
+          awk -v v="$version" '/^## /{if(f)exit; if(index($0,"## " v " ")==1){f=1;next}} f' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          # The run's token may push a tag but may not ask the API to create one: tag with git, then release that tag.
+          if ! git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            git tag "$tag" "$GITHUB_SHA"
+            git push origin "refs/tags/$tag"
+          fi
+          gh release create "$tag" --verify-tag --title "$version" --notes-file "$RUNNER_TEMP/notes.md"
+          echo "released $tag" | tee -a "$GITHUB_STEP_SUMMARY"
