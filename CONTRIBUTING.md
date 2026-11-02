@@ -1,13 +1,9 @@
-# Contributing to Will
+# Contributing
 
-Will is a standard and a reference reader under the MIT license. Anyone can contribute and by opening a pull request, you offer your change under the same MIT license as the rest.
+Anybody is welcome to contribute to Will, which is intended to be as universal as possible for marking what agents may edit in documents.
 
-- **A bug in the reader or a vector that disagrees with the text:** open an issue with the vector, or a pull request
-  that adds it to `vectors.json` red first.
-- **A change to the standard's words:** open an issue first; the words are the standard, so they move slowly and
-  with reasons. The README must still parse to no region and no fault (the workflow checks).
-- **A reader in another language:** implement this README and `vectors.json` independently. The Python and Go
-  hosts in `hosts/` use only standard libraries. Run each host's check command before submitting a change.
+Will uses the MIT license.
 
-Rapier, which carries Will, is at
-[github.com/jackskip22/rapier](https://github.com/jackskip22/rapier).
+For feedback, requests or questions, feel free to join the discussion. Our goal is to make Will as easy, fast, small, powerful and reliable as possible for every use case, while keeping the architecture simple and general.
+
+For very common use cases, we can add examples and plugins.
