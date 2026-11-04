@@ -2,11 +2,6 @@
 
 Will marks what in a document an agent may edit, add to or leave alone. The marks live inside the document: hidden comment lines in Markdown, and native carriers in DOCX, PDF and Google Docs. No registry, sidecar or account.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jackskip22/will/main/assets/write-1280-dark.png">
-  <img src="https://raw.githubusercontent.com/jackskip22/will/main/assets/write-1280-light.png" alt="An agent's change marked in Rapier, ready for the person to undo" width="960">
-</picture>
-
 ```text
  <!-- will/1 keep: the wording counsel approved -->
  The approved sentence.
@@ -33,6 +28,9 @@ evaluate(before, [{start: 6, end: 6, insert: ' More.'}]); // {outcome: 'applied'
 
 `parse`, `evaluate`, `diffSplices` and `compare` take strings or `Uint8Array` bytes; offsets count UTF-8 bytes. `evaluate` defaults to the working path and never writes. Apply the same splices to the same source yourself, once your host has authorized the act.
 Types: keep `will.d.mts` beside `will.mjs`.
+
+Snapshot comparison infers edits; it cannot detect a rewrite with identical bytes. Large or ambiguous changes can be
+refused even when protected bytes match. Use `evaluate` with the actual splices when your host records them.
 
 ## On GitHub
 

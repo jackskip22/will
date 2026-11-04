@@ -355,6 +355,34 @@ function lineSpans(buf) {
   return out;
 }
 const LCS_CELLS = 16e6;
+const ANCHOR_LINES = 50_000;
+function uniqueLineAnchors(a, b, start, aEnd, bEnd) {
+  const positions = new Map();
+  for (let i = start; i < aEnd; i++) {
+    const pair = positions.get(a[i]);
+    if (pair) pair[0] = -1;
+    else positions.set(a[i], [i, -1]);
+  }
+  for (let j = start; j < bEnd; j++) {
+    const pair = positions.get(b[j]);
+    if (pair) pair[1] = pair[1] === -1 ? j : -2;
+  }
+  const candidates = [...positions.values()].filter(([i, j]) => i >= 0 && j >= 0);
+  const tails = [], previous = new Int32Array(candidates.length).fill(-1);
+  for (let k = 0; k < candidates.length; k++) {
+    let lo = 0, hi = tails.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1;
+      if (candidates[tails[mid]][1] < candidates[k][1]) lo = mid + 1;
+      else hi = mid;
+    }
+    if (lo) previous[k] = tails[lo - 1];
+    tails[lo] = k;
+  }
+  const anchors = [];
+  for (let k = tails.length ? tails[tails.length - 1] : -1; k >= 0; k = previous[k]) anchors.push(candidates[k]);
+  return anchors.reverse();
+}
 export function diffSplices(beforeInput, afterInput) {
   const before = Buffer.from(beforeInput), after = Buffer.from(afterInput);
   const bl = lineSpans(before), al = lineSpans(after);
@@ -365,7 +393,7 @@ export function diffSplices(beforeInput, afterInput) {
   let tail = 0;
   while (tail < bk.length - head && tail < ak.length - head && bk[bk.length - 1 - tail] === ak[ak.length - 1 - tail]) tail++;
   const n = bk.length - head - tail, m = ak.length - head - tail;
-  const pairs = [];
+  let pairs = [];
   if (n && m && n * m <= LCS_CELLS) {
     const w = m + 1, table = new Uint32Array((n + 1) * w);
     const weight = line => line.startsWith(OPENER_PREFIX) || line.startsWith(CLOSER_PREFIX) ? w : 1;
@@ -377,6 +405,8 @@ export function diffSplices(beforeInput, afterInput) {
       else if (table[(i + 1) * w + j] >= table[i * w + j + 1]) i++;
       else j++;
     }
+  } else if (n && m && n + m <= ANCHOR_LINES) {
+    pairs = uniqueLineAnchors(bk, ak, head, bk.length - tail, ak.length - tail);
   }
   pairs.push([bk.length - tail, ak.length - tail]);
   const splices = [];
