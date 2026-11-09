@@ -12,19 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
+      SHA: ${{ github.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: tag v<version> (the top CHANGELOG.md section) and release it with that section
+      - name: tag v<version> (the notes this commit's message carries) and release it with them
         run: |
           set -eu
-          version=$(sed -n 's/^## \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\) .*$/\1/p' CHANGELOG.md | head -n 1)
+          version=$(git log -1 --format=%B "$SHA" | sed -n 's/^## \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)\( .*\)\{0,1\}$/\1/p' | head -n 1)
+          if [ -z "$version" ]; then echo "not a release commit: no notes" | tee -a "$GITHUB_STEP_SUMMARY"; exit 0; fi
           tag="v$version"
           if gh release view "$tag" >/dev/null 2>&1; then echo "$tag is already released" | tee -a "$GITHUB_STEP_SUMMARY"; exit 0; fi
-          awk -v v="$version" '/^## /{if(f)exit; if(index($0,"## " v " ")==1){f=1;next}} f' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          notes_file="$RUNNER_TEMP/notes.md"
+          escaped=$(printf '%s' "$version" | sed 's/\./\\./g')
+          release=$(git log -1 --format=%H -E --grep="^## $escaped( |\$)" "$SHA")
+          if [ -z "$release" ]; then echo "no commit at or before $SHA carries the $version notes" >&2; exit 1; fi
+          git log -1 --format=%B "$release" | awk -v v="$version" 'f && /^## /{exit} f{print} $0 == "## " v || index($0, "## " v " ") == 1 {f=1}' | sed -e '/./,$!d' > "$notes_file"
+          if ! grep -q '[^[:space:]]' "$notes_file"; then echo "the $version notes are empty" >&2; exit 1; fi
           # The run's token may push a tag but may not ask the API to create one: tag with git, then release that tag.
           if ! git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
-            git tag "$tag" "$GITHUB_SHA"
+            git tag "$tag" "$release"
             git push origin "refs/tags/$tag"
           fi
-          gh release create "$tag" --verify-tag --title "$version" --notes-file "$RUNNER_TEMP/notes.md"
+          gh release create "$tag" --verify-tag --title "$version" --notes-file "$notes_file"
           echo "released $tag" | tee -a "$GITHUB_STEP_SUMMARY"
