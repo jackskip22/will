@@ -8,7 +8,7 @@ Will marks what in a document an agent may edit, add to or leave alone. The mark
  <!-- /will -->
 ```
 
-(Indented one space so this README carries no live marker.) Three laws: `edit` may change, `append` adds only at the end, `keep` stays byte for byte. Unmarked content is `edit`. A marker that cannot be read exactly makes the whole document `keep`.
+(Indented one space so this README carries no live marker.) Three laws: `edit` may change, `append` adds only at the end, `keep` stays exactly as it is. Unmarked content is `edit`. A marker that cannot be read exactly makes the whole document `keep`.
 
 ## Check a change
 
@@ -29,7 +29,7 @@ evaluate(before, [{start: 6, end: 6, insert: ' More.'}]); // {outcome: 'applied'
 `parse`, `evaluate`, `diffSplices` and `compare` take strings or `Uint8Array` bytes; offsets count UTF-8 bytes. `evaluate` defaults to the working path and never writes. Apply the same splices to the same source yourself, once your host has authorized the act.
 Types: keep `will.d.mts` beside `will.mjs`.
 
-Snapshot comparison infers edits; it cannot detect a rewrite with identical bytes. Large or ambiguous changes can be
+Snapshot comparison infers edits; it cannot detect a rewrite that changes nothing. Large or ambiguous changes can be
 refused even when protected bytes match. Use `evaluate` with the actual splices when your host records them.
 
 ## On GitHub
@@ -87,7 +87,7 @@ no other dash, spelling or case. Markers are
 recognized by these bytes alone, inside code fences too; `<!--will/` and `<!--/will` at column zero are faults,
 and text outside these prefixes is content. Pairs never nest or interleave; a pair copied elsewhere governs
 there. Only LF, CRLF and CR end a line. The governed region starts after the opener's line terminator and ends before the closer's line. `keep`
-compares it byte for byte; `append` needs the old bytes as an exact prefix, less the final line terminator
+compares it exactly; `append` needs the old bytes as an exact prefix, less the final line terminator
 before the closer, which belongs to the carrier.
 
 A will that cannot be read exactly faults the whole document closed: a working hand treats all of it as `keep`
@@ -125,7 +125,7 @@ Marker spans and marker-fault spans include the complete line and its terminator
 ## The host
 
 A host declares which of its paths are the person's own (authoring) and which are a hand's (working). A working
-path never writes a marker, moves one or writes one back byte-identically. It judges each act by the exact bytes
+path never writes a marker, moves one or writes one back unchanged. It judges each act by the exact bytes
 replaced, against the source as it stood, and answers with one of three words: `applied`; `refused` with the
 document-law reason; `invalid` when the question itself could not be read. Every range disclosure names the same four
 facts: `law`, `region`, `intent` (when the range lies within one region) and `rule`. Will authenticates nobody
