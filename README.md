@@ -1,40 +1,177 @@
 # Will
 
-Will marks what in a document an agent may edit, add to or leave alone. The marks live inside the document: hidden comment lines in Markdown, and native carriers in DOCX, PDF and Google Docs. No registry, sidecar or account.
+Mark the text an agent may change. The marks stay in the file; a guard refuses edits that break them.
+
+- `edit`: text may change. Unmarked text is editable.
+- `append`: add only at the end; keep existing text in order.
+- `keep`: leave the text unchanged.
+
+Add this line to `AGENTS.md` or `CLAUDE.md`:
+
+> Keep Will marks and `keep` text unchanged; add only at the end of `append`.
 
 ```text
- <!-- will/1 keep: the wording counsel approved -->
+ <!-- will/1 keep -->
  The approved sentence.
  <!-- /will -->
 ```
 
-(Indented one space so this README carries no live marker.) Three laws: `edit` may change, `append` adds only at the end, `keep` stays exactly as it is. Unmarked content is `edit`. A marker that cannot be read exactly makes the whole document `keep`.
+The example is indented so this README has no live mark. In Markdown, marks start at column zero.
+Unreadable marks keep the whole file. Other text files use whole-line comments; DOCX, PDF, and Google Docs
+have their own carriers. Marks guide an agent; the program applying an edit must enforce them.
 
 ## Check a change
 
 ```sh
-node will.mjs compare before.md after.md
+node guard.mjs before.js after.js --file source.js
+node guard.mjs before.js --splices edits.json --file source.js
 ```
 
-[`will.mjs`](will.mjs) is the reference reader and evaluator: one file, Node.js 22.23.4 or later, no dependencies. In code:
+The command returns JSON: `applied`, `refused`, or `invalid`. A refusal names the law, region, opener line,
+rule, and how to recover. Lines count from 1; regions from 0. Exit codes are 0, 1, and 2 respectively.
+The command checks the proposal and does not write either file. The host authorizes and applies the same
+checked bytes. Use a trusted installation outside the agent's writable files.
+
+An edit file is an array of `{start, end, insert}` splices against the unchanged original; offsets count UTF-8
+bytes. `insertBase64` can supply exact bytes instead of `insert`. Empty deletion content must be explicit.
+The CLI rejects invalid UTF-8 and preserves numeric spellings, so a fractional offset cannot round into permission.
 
 ```js
-import {parse, evaluate} from './will.mjs';
-
-const before = Buffer.from('Notes.\n');
-parse(before).regions;
-evaluate(before, [{start: 6, end: 6, insert: ' More.'}]); // {outcome: 'applied'}
+import {guard} from './guard.mjs';
+const result = guard(beforeBytes, [{start: 6, end: 6, insert: ' More.'}], {file: 'notes.txt'});
 ```
 
-`parse`, `evaluate`, `diffSplices` and `compare` take strings or `Uint8Array` bytes; offsets count UTF-8 bytes. `evaluate` defaults to the working path and never writes. Apply the same splices to the same source yourself, once your host has authorized the act.
-Types: keep `will.d.mts` beside `will.mjs`.
+`will.mjs` is the reference reader and evaluator: Node.js 22.23.4 or later, no dependencies.
+`parse`, `evaluate`, `diffSplices`, and `compare` take strings or `Uint8Array` bytes. `evaluate` defaults to
+`working` and never writes. Keep `will.d.mts` beside it. `exactJSON` preserves numeric lexemes for the evaluator;
+its decoded values are still unvalidated input.
 
-Snapshot comparison infers edits; it cannot detect a rewrite that changes nothing. Large or ambiguous changes can be
-refused even when protected bytes match. Use `evaluate` with the actual splices when your host records them.
+Snapshot comparison infers one allowed sequence of edits between unchanged marker lines. It cannot prove which
+write actually happened: moving or replacing a pair can be indistinguishable from allowed edits around it.
+Use `evaluate` or `guard` with the actual splices when the host witnesses them. An identical marker replacement
+is refused on that path, even though identical before/after snapshots show no change.
 
-## On GitHub
+## Check sealed text without an original
 
-A pull request that changes a `keep` region, rewrites an `append` region anywhere but its end, or touches a marker fails, with the file and line named. It checks `.md` and `.markdown` files, in any case. A new file is the author's; removing a file that keeps or appends is refused.
+```sh
+node will.mjs seal notes.md > sealed.md
+node will.mjs verify sealed.md
+```
+
+`seal(bytes)` returns a copy with seals on unsealed `keep` and `append` regions. It is an **authoring** operation:
+the host must authorize it. `verifySeals(bytes)` reports each region as `intact`, `changed`, or `unsealed`, with a
+reason when it cannot verify it. Neither operation changes Will's laws or the result of `parse` or `evaluate`.
+
+A seal is the final item in the opener's existing intent:
+
+```text
+ <!-- will/1 keep: Do not change this. [seal/1 sha256-128:2:2b054f4b13229641acc4cdb9fa46a4ea] -->
+ A
+ <!-- /will -->
+```
+
+The example is indented to quote it. Its governed bytes are `A` and LF. The suffix is
+`[seal/1 sha256-128:<length>:<digest>]`: a canonical decimal byte length and 32 lowercase hexadecimal digits.
+It follows the person's unchanged words with one space, or is the whole intent. The complete intent must still
+fit Will/1's 512-scalar limit. Older readers see ordinary intent, with the same law and region.
+
+The digest is the first 128 bits of SHA-256 over the UTF-8 header
+`will/1 seal/1 sha256-128\0<law>\0<length>\0`, followed by the covered bytes. Here `\0` denotes one zero byte.
+`keep` covers the complete governed interval. `append` covers the initial interval except its final LF, CRLF,
+or CR; the stored length identifies that prefix after additions. Verification also excludes the current carrier
+terminator so it cannot replace an old content newline. Nothing normalizes line endings, Unicode, spaces, or
+Markdown. The opener, closer, surrounding text, and a later append tail are outside the fingerprint.
+
+Seals detect accidental or careless text changes, **not authenticity**. An independent accidental match has
+probability about 2^-128; this is not a collision-free guarantee. Someone who rewrites the seal can hide a change.
+A document alone cannot reveal a removed seal or marker, or prove when, where, or by whom it was sealed.
+Use witnessed edits or before/after comparison to enforce the law, including additions made after a seal.
+
+`seal` preserves intact seals exactly; it never advances an append seal or repairs a changed one. It throws
+before returning any bytes for faulty markers, unusable seals, mismatches, or intent overflow. A person who
+intends a fresh seal must explicitly remove the old suffix. Verification leaves damaged or unsupported tags
+`unsealed` with a reason; it never adds a Will grammar fault. The CLI exits 1 for changed text, faulty markers,
+or a present unusable tag. Exit 0 can include regions with no seal; it means no mismatch was detected.
+
+DOCX and PDF carry the same opener text in their existing native marker carrier. This seal proves only an exact
+UTF-8 text stream, not Word structure, relationships, PDF geometry, or appearance. Verify it only when that exact
+governed stream is recoverable. Conversion that changes the stream breaks the seal even if the words look the
+same. A converter must disclose that loss, or verify the source and explicitly create a new target seal; it must
+never silently repair the old fingerprint. Will's separate preserve-or-report-loss conversion rule still applies.
+
+## Check sealed passages
+
+Lists sealed passages across a file or tree, with their locations and whether their sealed bytes changed.
+
+```sh
+node approval.mjs notes.md
+node approval.mjs path/to/project
+```
+
+Each JSON line names `file`, `region`, `line`, `law`, and `status` (`intact` or `changed`). Lines start at 1;
+regions start at 0. Exit 0 means no changed or unreadable seal was found; 1 means changed text; 2 means an
+incomplete report. Errors go to stderr. An empty report means no seals were found. An append seal covers
+only its recorded prefix. Seals prove neither identity nor permission and cannot reveal removed seals without
+an original inventory.
+
+Tree scans visit regular UTF-8 files in path order and skip `.git`, binary files, and symbolic links.
+A single-file request never silently skips its target. Markdown keeps its original binding.
+
+## Publish without marks
+
+```sh
+node will.mjs strip private.md > public.md
+```
+
+`strip(bytes, options)` returns `{bytes, removed}`: a copy without recognized marker lines and their line
+endings. Every other byte stays unchanged. `removed` counts marker lines. The command writes the copy to stdout
+and the count to stderr; faulty input exits 1 without writing a partial copy. Strip is an authorized publishing
+step: keep the marked source, and publish only the returned copy. It removes intent and seals with the marks.
+
+The filename selects Markdown or text binding. For another binding, use `--binding markdown` or `--binding text`;
+stdin defaults to Markdown. Code can pass `{binding: 'text'}`. A changed seal does not prevent an intentional strip;
+unreadable marks do. The result carries no Will protection.
+
+## Before an agent writes
+
+The [Claude Code PreToolUse hook](https://code.claude.com/docs/en/hooks#pretooluse-input) accepts `Write` and `Edit`.
+Keep `will.mjs`, `guard.mjs`, and `hook.mjs` together in a trusted directory. Add the `hooks` entry from
+[`claude-hook.json`](claude-hook.json) to your settings and replace its script path. Use Claude Code v2.1.295 or later:
+[`onFailure: "block"`](https://code.claude.com/docs/en/hooks#block-the-action-when-a-hook-fails) also stops writes when
+the hook cannot start or times out. Test an attempted change to a kept passage after installation.
+
+`Edit` supplies the exact replacements, including `replace_all`; ambiguous matches are refused. `Write` compares
+snapshots. A new file has no previous Will. The hook only vetoes a write; it never grants host permission and never
+writes the file itself. Read failures and malformed requests are refused. Symbolic links use the target's binding.
+Files with multiple hard links are refused because aliases can select different bindings. Preserve the canonical
+file and have its author resolve the extra links before retrying.
+
+This hook covers those two tools. Shell commands, other tools, and external programs do not pass through it. Keep
+the hook and its settings outside the agent's writable scope. Serialize writes to each file and do not combine this
+hook with one that rewrites the tool input: the check cannot lock the host's later write or see another hook's
+replacement. A host that owns its write transaction should call `guard` immediately before committing the same
+checked bytes. Other harnesses can use that API with their documented before-write interface.
+
+## At commit and pull request
+
+`node git-check.mjs staged` checks `HEAD` against an immutable snapshot of the index. Unstaged repairs cannot hide a
+staged violation. To install, keep `will.mjs`, `guard.mjs`, and `git-check.mjs` under the Git hook directory's `will/`
+folder, copy [`pre-commit`](pre-commit) into the hook directory, and make it executable. If a pre-commit hook already
+exists, add this command to it and preserve its other checks. Locate the directory with `git rev-parse --git-path hooks`.
+
+`node git-check.mjs pr BASE HEAD --github` compares two commits and emits GitHub error annotations. Use a reviewed
+commit of the action and fetch both compared commits. The action runs the checker from its own installation,
+never from the candidate tree. Do not use a local action checked out from an untrusted pull request. A required
+branch check is configured in the host; a local Git hook can be bypassed with `--no-verify`.
+
+Every changed UTF-8 text file is checked, regardless of extension. Existing Markdown is always checked, including
+faults. Other binary blobs (NUL or invalid UTF-8) are skipped only when they contain no `will/` or `/will` bytes.
+Once the original is selected, converting it to binary cannot remove its protection. New files have no previous
+Will. Renames are checked as removal plus creation: moving a marked file, deleting it, or replacing it with a
+symbolic link is refused, even for `edit`, because a working path cannot remove a marker. Unmerged indexes and
+unreadable Git objects stop the check.
+
+Example pull-request workflow:
 
 ```yaml
 on: pull_request
@@ -44,12 +181,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}
-      - uses: jackskip22/will@main
+      - uses: jackskip22/will@<reviewed-commit-sha>
 ```
+
+Replace the action ref with a reviewed release commit. Require the check in the repository's branch rules.
 
 ## For an agent
 
-Honor the markers: change `edit`, add only at the end of `append`, leave `keep` alone, never touch a marker. Intent is the person's words, not permission. If a marker cannot be read exactly, change nothing and say so.
+Read the marks before editing and run the guard before writing. Intent grants no authority. If marks cannot be read exactly, change nothing and report the fault.
 
 [Rapier](https://rapier.website) uses Will for live editing with agents over MCP and WebMCP. Connect to `https://mcp.rapier.website/door/mcp` and call `open`; no account or key. [Agent guide](https://rapier.website/agents).
 
@@ -122,6 +261,39 @@ Marker spans and marker-fault spans include the complete line and its terminator
 | Region | `index`, `law`, `intent` (`null` when absent), `opener`, `closer`, `governedSpan` |
 | Opener or closer | `line`, `byteSpan` |
 
+## Other text files
+
+The `text` binding recognizes a whole line whose content is a Will opener or closer, with optional comment
+punctuation and ASCII spaces or tabs around it. It needs no language parser. The forms are:
+
+| Carrier | Opener | Closer |
+| --- | --- | --- |
+| Plain text | `will/1 keep` | `/will` |
+| Hash | `# will/1 keep` | `# /will` |
+| Slash | `// will/1 keep` | `// /will` |
+| Dash | `-- will/1 keep` | `-- /will` |
+| Semicolon | `; will/1 keep` | `; /will` |
+| Percent | `% will/1 keep` | `% /will` |
+| Block | `/* will/1 keep */` | `/* /will */` |
+| HTML comment | `<!-- will/1 keep -->` | `<!-- /will -->` |
+
+Use punctuation valid in the file's language; the reader does not make a comment legal in a format that forbids
+comments. A block carrier must open and close on that one line. An unclosed marker-shaped block line faults.
+Multi-line comments and strings do not change recognition: a supported whole-line mark inside either is still
+live. Lines starting with `*`, quoted strings, and inline mentions are ordinary content. To quote a mark in text,
+put prose or a backtick before it; indentation alone does not quote it. Pairs can use different carriers.
+
+After removing the carrier and its outer horizontal padding, the same exact version, law, intent, and pairing
+grammar applies. Padding is not intent. Marker byte spans include the original indentation, punctuation,
+padding, and line terminator; a worker cannot rewrite any of them. The same UTF-8 faults and byte laws apply.
+This explicit namespace makes an inline discussion of Will inert without guessing the file's syntax.
+
+`.md` and `.markdown`, in any case, keep the Markdown binding above, including column zero and indentation as
+quotation. APIs default to Markdown; pass `{binding: 'text'}` as the last argument for another text file.
+`evaluate` keeps `working` or `authoring` as its third argument. `bindingForFile(path)` selects the binding.
+The file commands select by the before-file's name; `--binding markdown` or `--binding text` overrides it.
+Stdin defaults to Markdown. The text vectors and seals use the same reference reader, not a second parser.
+
 ## The host
 
 A host declares which of its paths are the person's own (authoring) and which are a hand's (working). A working
@@ -136,7 +308,7 @@ and grants nothing: the document carries the word, the host carries the path.
 Evaluate takes the before-document bytes, a list of splices `{start, end, insert}`, and `working` or `authoring`.
 Each splice replaces `[start, end)` with explicit bytes, including an explicit empty value for deletion. Offsets
 are nonnegative integers into the unchanged before-document, with `start <= end <= byteLength`. Validate input
-before consulting document law: check the path, the list, then each supplied item's shape and range in input
+before consulting document law: check the path, binding, list, then each supplied item's shape and range in input
 order. Sort splices by source offset; refuse overlapping replacements or any two splices with the same start.
 An insertion at a preceding replacement's end is allowed. Never derive narrower splices from the resulting text.
 
@@ -163,7 +335,7 @@ new one. `edit` imposes no governed-byte comparison.
 
 An applied decision contains only `outcome`. A refusal contains `outcome: "refused"`, `reason: "document_law"`,
 `rule`, and only the additional fields in the table. Invalid input contains `outcome: "invalid"`,
-`reason: "precondition"`, and one rule: `unknown_path`, `malformed_splice`, `out_of_range_splice` or
+`reason: "precondition"`, and one rule: `unknown_path`, `unknown_binding`, `malformed_splice`, `out_of_range_splice`, or
 `overlapping_splices`. A malformed splice list, item, offset or missing/non-byte insertion is `malformed_splice`;
 an end beyond the document is `out_of_range_splice`. Intent never changes these mechanical decisions.
 
@@ -187,15 +359,19 @@ node will.mjs check vectors.json       # this reference against the vectors
 node will.mjs --adapter < cases.ndjson # any implementation over the same cases
 ```
 
-Hosts written independently in Python and Go, from this text and the vectors alone, pass them all.
+The optional `sealVectors`, `textVectors`, and `stripVectors` arrays test seals, other text bindings, and publishing
+copies. The JavaScript `check` command and `checkVectors` run all four arrays. Markdown conformance hosts need only
+the unchanged `vectors` array.
+
+The independent Python and Go hosts cover the Markdown cases.
 Run each host from this repository's root:
 
-| Host | Requirements | Run all vectors |
+| Host | Requirements | Run Markdown vectors |
 | --- | --- | --- |
 | [Python](hosts/python/) | Python 3.11+ | `python3 hosts/python/will.py check vectors.json` |
 | [Go](hosts/go/) | Go 1.22+ | `(cd hosts/go && go run ./cmd/will check ../../vectors.json)` |
 
-Both commands compare complete result objects, including omitted versus null fields, and exit nonzero on a
+The Python and Go hosts cover the original Markdown vectors. Both commands compare complete result objects, including omitted versus null fields, and exit nonzero on a
 mismatch. The workflow runs the reference and both independent hosts on every push and pull request. It also
 checks both real adapter processes against the vectors and the malformed-byte and request-recovery cases in
 `hosts/adapter-vectors.json`.
@@ -211,6 +387,11 @@ The response is `{kind, result}`, with the normalized parse or evaluation result
 is echoed as `id`; it never affects evaluation.
 Numeric offsets retain their exact JSON value: integral decimal or exponent forms are integers, fractional
 values are malformed, and integers beyond the document's byte length are out of range.
+
+The JavaScript adapter accepts an optional `binding: "markdown" | "text"` on each request. It also accepts
+`kind: "verify"`, `kind: "seal"`, or `kind: "strip"` with `doc` or `docBase64`. Verification returns its report.
+Sealing returns `{docBase64}` or `{error, region?}`; stripping returns `{docBase64, removed}` or `{error}`.
+Other Will/1 adapters need not implement these optional requests.
 
 Blank lines, malformed JSON, an unknown kind, a nonstring `id`, a missing path or an invalid document byte
 field returns `{"error":"invalid_request"}`.
