@@ -1,17 +1,21 @@
 name: Will
-description: Refuse a pull request that changes a region its document marks keep, or rewrites one marked append.
+description: Check that changed text files keep their protected regions and markers.
 branding: {icon: lock, color: gray-dark}
 inputs:
   base:
-    description: The commit the pull request is judged against.
+    description: The trusted base commit to compare against.
     default: ${{ github.event.pull_request.base.sha }}
+  head:
+    description: The candidate commit to check.
+    default: ${{ github.event.pull_request.head.sha || github.sha }}
 runs:
   using: composite
   steps:
     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       with:
-        node-version: 22
+        node-version: 22.23.4
     - shell: bash
       env:
-        BASE: ${{ inputs.base }}
-      run: node "$GITHUB_ACTION_PATH/will.mjs" pr "$BASE"
+        WILL_BASE: ${{ inputs.base }}
+        WILL_HEAD: ${{ inputs.head }}
+      run: node "$GITHUB_ACTION_PATH/git-check.mjs" pr "$WILL_BASE" "$WILL_HEAD" --github

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT
-// binding is claimed). Zero dependencies, one file. MIT.
 
 import { readFileSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
+import { isUtf8 } from 'node:buffer';
 import { pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
 
 const LAWS = new Set(['edit', 'append', 'keep']);
 const OPENER_PREFIX = '<!-- will/';
@@ -15,22 +15,25 @@ const INTENT_MAX_SCALARS = 512;
 const UNSPACED_OPENER_PREFIX = '<!--will/';
 const UNSPACED_CLOSER_PREFIX = '<!--/will';
 
-function splitLines(buf) {
-  const lines = [];
-  const n = buf.length;
-  let lineStart = 0;
-  for (let i = 0; i < n; i++) {
-    if (buf[i] === 0x0A || buf[i] === 0x0D) {
-      const contentEnd = i;
-      if (buf[i] === 0x0D && buf[i + 1] === 0x0A) i++;
-      lines.push({ start: lineStart, contentEnd, lineEnd: i + 1 });
-      lineStart = i + 1;
+function* markerLines(buf) {
+  let cursor = 0, line = 0;
+  for (let at; (at = buf.indexOf('will', cursor)) >= 0;) {
+    let start = cursor;
+    for (let i = cursor; i < at; i++) {
+      if (buf[i] === 0x0d || buf[i] === 0x0a) {
+        if (buf[i] === 0x0d && buf[i + 1] === 0x0a) i++;
+        start = i + 1;
+        line++;
+      }
     }
+    let contentEnd = at;
+    while (contentEnd < buf.length && buf[contentEnd] !== 0x0a && buf[contentEnd] !== 0x0d) contentEnd++;
+    let lineEnd = contentEnd;
+    if (lineEnd < buf.length) lineEnd += buf[lineEnd] === 0x0d && buf[lineEnd + 1] === 0x0a ? 2 : 1;
+    yield {start, contentEnd, lineEnd, line};
+    cursor = lineEnd;
+    if (lineEnd > contentEnd) line++;
   }
-  if (lineStart < n || n === 0) {
-    lines.push({ start: lineStart, contentEnd: n, lineEnd: n });
-  }
-  return lines;
 }
 
 function findInvalidUtf8(buf) {
@@ -62,10 +65,47 @@ function findInvalidUtf8(buf) {
 
 function scalarCount(s) { return [...s].length; }
 
-export function parse(bytesInput) {
+export function bindingForFile(file) {
+  if (typeof file !== 'string') throw new TypeError('file must be a string');
+  return /\.(?:md|markdown)$/i.test(file) ? 'markdown' : 'text';
+}
+function bindingOf(options) {
+  if (options !== undefined && (options === null || typeof options !== 'object' || Array.isArray(options)))
+    throw new TypeError('options must name a binding');
+  const binding = options === undefined || !('binding' in options) ? 'markdown' : options.binding;
+  if (binding !== 'markdown' && binding !== 'text') throw new TypeError('unknown binding');
+  return binding;
+}
+const horizontalSpace = c => c === ' ' || c === '\t';
+const COMMENT_CARRIERS = [['<!--','-->'],['/*','*/'],['//',''],['--',''],['#',''],[';',''],['%','']];
+function markerLine(raw, binding) {
+  if (binding === 'markdown') return {text: raw, start: 5, end: raw.length - 4, malformed: false};
+  if (!raw.includes('will/') && !raw.includes('/will')) return {text:'',malformed:false};
+  let start = 0, end = raw.length, close = '';
+  while (horizontalSpace(raw[start])) start++;
+  while (end > start && horizontalSpace(raw[end - 1])) end--;
+  for (const [prefix, suffix] of COMMENT_CARRIERS) {
+    if (!raw.startsWith(prefix,start)) continue;
+    start += prefix.length; close = suffix; break;
+  }
+  while (start < end && horizontalSpace(raw[start])) start++;
+  if (!raw.startsWith('will/',start) && !raw.startsWith('/will',start)) return {text:'',malformed:false};
+  let malformed = false;
+  if (close) {
+    if (raw.slice(0,end).endsWith(close)) end -= close.length;
+    else malformed = true;
+    while (end > start && horizontalSpace(raw[end - 1])) end--;
+  }
+  const payload = raw.slice(start,end);
+  if (close && payload.includes(close)) malformed = true;
+  return {text:'<!-- ' + payload + ' -->',start,end,malformed};
+}
+
+export function parse(bytesInput, options) {
+  const binding = bindingOf(options);
   const buf = Buffer.isBuffer(bytesInput) ? bytesInput : Buffer.from(bytesInput);
 
-  const bad = findInvalidUtf8(buf);
+  const bad = isUtf8(buf) ? null : findInvalidUtf8(buf);
   if (bad) {
     return {
       regions: [],
@@ -74,18 +114,17 @@ export function parse(bytesInput) {
     };
   }
 
-  const rawLines = splitLines(buf);
   const faults = [];
   const regions = [];
   let open = null;
 
-  for (let idx = 0; idx < rawLines.length; idx++) {
-    const { start, contentEnd, lineEnd } = rawLines[idx];
+  for (const {start,contentEnd,lineEnd,line:idx} of markerLines(buf)) {
     const lineSpan = [start, lineEnd];
-    const text = buf.slice(start, contentEnd).toString('utf8');
+    const marker = markerLine(buf.toString('utf8',start,contentEnd),binding);
+    const text = marker.text;
 
     if (text.startsWith(CLOSER_PREFIX)) {
-      if (text !== CLOSER_EXACT) {
+      if (text !== CLOSER_EXACT || marker.malformed) {
         faults.push({ mode: 'malformed_marker', line: idx, byteSpan: lineSpan });
         continue;
       }
@@ -119,7 +158,7 @@ export function parse(bytesInput) {
       faults.push({ mode: 'unknown_version', line: idx, byteSpan: lineSpan });
       continue;
     }
-    if (!text.endsWith(CLOSE_SUFFIX)) {
+    if (!text.endsWith(CLOSE_SUFFIX) || marker.malformed) {
       faults.push({ mode: 'malformed_marker', line: idx, byteSpan: lineSpan });
       continue;
     }
@@ -184,7 +223,7 @@ function isValidBase64(s) {
 function spliceInsertOk(s) {
   if ((s.insert === undefined) === (s.insertBase64 === undefined)) return false;
   if (s.insertBase64 !== undefined) return isValidBase64(s.insertBase64);
-  return typeof s.insert === 'string' ? s.insert.isWellFormed() : Buffer.isBuffer(s.insert);
+  return typeof s.insert === 'string' ? s.insert.isWellFormed() : s.insert instanceof Uint8Array;
 }
 
 class JSONNumber { constructor(source) { this.source = source; } }
@@ -279,13 +318,15 @@ function stripOneTrailingTerminator(buf) {
   return buf;
 }
 
-export function evaluate(beforeBytesInput, spliceInputs, path = 'working') {
+export function evaluate(beforeBytesInput, spliceInputs, path = 'working', options) {
   const beforeBytes = Buffer.isBuffer(beforeBytesInput) ? beforeBytesInput : Buffer.from(beforeBytesInput);
   const rawSplices = spliceInputs;
 
   if (path !== 'authoring' && path !== 'working') {
     return { outcome: 'invalid', reason: 'precondition', rule: 'unknown_path' };
   }
+  try { bindingOf(options); }
+  catch { return {outcome:'invalid',reason:'precondition',rule:'unknown_binding'}; }
 
   const shape = validateSplices(beforeBytes, rawSplices);
   if (!shape.ok) {
@@ -295,7 +336,7 @@ export function evaluate(beforeBytesInput, spliceInputs, path = 'working') {
 
   if (path === 'authoring') return { outcome: 'applied' };
 
-  const b = parse(beforeBytes);
+  const b = parse(beforeBytes,options);
   if (b.faulted) {
     if (splices.length === 0) return { outcome: 'applied' };
     return { outcome: 'refused', reason: 'document_law', rule: 'before_faulted', faults: b.faults };
@@ -315,7 +356,7 @@ export function evaluate(beforeBytesInput, spliceInputs, path = 'working') {
   }
 
   const afterBytes = applySplices(beforeBytes, splices);
-  const a = parse(afterBytes);
+  const a = parse(afterBytes,options);
   if (a.faulted) {
     return { outcome: 'refused', reason: 'document_law', rule: 'result_faulted', faults: a.faults };
   }
@@ -345,111 +386,138 @@ export function evaluate(beforeBytesInput, spliceInputs, path = 'working') {
   return { outcome: 'applied' };
 }
 
-function lineSpans(buf) {
-  const out = [];
-  let start = 0;
-  for (let i = 0; i < buf.length; i++) {
-    if (buf[i] === 0x0a || (buf[i] === 0x0d && buf[i + 1] !== 0x0a)) { out.push([start, i + 1]); start = i + 1; }
+function commonBytes(a,b,tail=false) {
+  let lo=0,hi=Math.min(a.length,b.length)+1;
+  while(lo+1<hi) {
+    const mid=Math.floor((lo+hi)/2);
+    const same=tail ? a.subarray(a.length-mid).equals(b.subarray(b.length-mid)) : a.subarray(0,mid).equals(b.subarray(0,mid));
+    if(same)lo=mid;else hi=mid;
   }
-  if (start < buf.length) out.push([start, buf.length]);
-  return out;
+  return lo;
 }
-const LCS_CELLS = 16e6;
-const ANCHOR_LINES = 50_000;
-function uniqueLineAnchors(a, b, start, aEnd, bEnd) {
-  const positions = new Map();
-  for (let i = start; i < aEnd; i++) {
-    const pair = positions.get(a[i]);
-    if (pair) pair[0] = -1;
-    else positions.set(a[i], [i, -1]);
-  }
-  for (let j = start; j < bEnd; j++) {
-    const pair = positions.get(b[j]);
-    if (pair) pair[1] = pair[1] === -1 ? j : -2;
-  }
-  const candidates = [...positions.values()].filter(([i, j]) => i >= 0 && j >= 0);
-  const tails = [], previous = new Int32Array(candidates.length).fill(-1);
-  for (let k = 0; k < candidates.length; k++) {
-    let lo = 0, hi = tails.length;
-    while (lo < hi) {
-      const mid = (lo + hi) >>> 1;
-      if (candidates[tails[mid]][1] < candidates[k][1]) lo = mid + 1;
-      else hi = mid;
-    }
-    if (lo) previous[k] = tails[lo - 1];
-    tails[lo] = k;
-  }
-  const anchors = [];
-  for (let k = tails.length ? tails[tails.length - 1] : -1; k >= 0; k = previous[k]) anchors.push(candidates[k]);
-  return anchors.reverse();
+function changedGap(before,after,bs,be,as,ae) {
+  let old=before.subarray(bs,be),next=after.subarray(as,ae);
+  if(old.equals(next)) return null;
+  const prefix=commonBytes(old,next);
+  old=old.subarray(prefix);next=next.subarray(prefix);
+  const suffix=commonBytes(old,next,true);
+  return {start:bs+prefix,end:be-suffix,insertBase64:next.subarray(0,next.length-suffix).toString('base64')};
 }
-export function diffSplices(beforeInput, afterInput) {
-  const before = Buffer.from(beforeInput), after = Buffer.from(afterInput);
-  const bl = lineSpans(before), al = lineSpans(after);
-  const key = (buf, [s, e]) => buf.toString('latin1', s, e);
-  const bk = bl.map(span => key(before, span)), ak = al.map(span => key(after, span));
-  let head = 0;
-  while (head < bk.length && head < ak.length && bk[head] === ak[head]) head++;
-  let tail = 0;
-  while (tail < bk.length - head && tail < ak.length - head && bk[bk.length - 1 - tail] === ak[ak.length - 1 - tail]) tail++;
-  const n = bk.length - head - tail, m = ak.length - head - tail;
-  let pairs = [];
-  if (n && m && n * m <= LCS_CELLS) {
-    const w = m + 1, table = new Uint32Array((n + 1) * w);
-    const weight = line => line.startsWith(OPENER_PREFIX) || line.startsWith(CLOSER_PREFIX) ? w : 1;
-    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) {
-      table[i * w + j] = bk[head + i] === ak[head + j] ? table[(i + 1) * w + j + 1] + weight(bk[head + i]) : Math.max(table[(i + 1) * w + j], table[i * w + j + 1]);
-    }
-    for (let i = 0, j = 0; i < n && j < m;) {
-      if (bk[head + i] === ak[head + j]) { pairs.push([head + i, head + j]); i++; j++; }
-      else if (table[(i + 1) * w + j] >= table[i * w + j + 1]) i++;
-      else j++;
-    }
-  } else if (n && m && n + m <= ANCHOR_LINES) {
-    pairs = uniqueLineAnchors(bk, ak, head, bk.length - tail, ak.length - tail);
+export function diffSplices(beforeInput,afterInput,options) {
+  bindingOf(options);
+  const before=Buffer.isBuffer(beforeInput)?beforeInput:Buffer.from(beforeInput);
+  const after=Buffer.isBuffer(afterInput)?afterInput:Buffer.from(afterInput);
+  const whole=changedGap(before,after,0,before.length,0,after.length);
+  if(!whole) return [];
+  const b=parse(before,options),a=parse(after,options);
+  if(b.faulted || a.faulted || b.regions.length!==a.regions.length) return [whole];
+  const anchors=[];
+  for(let i=0;i<b.regions.length;i++) for(const kind of ['opener','closer']) {
+    const from=b.regions[i][kind].byteSpan,to=a.regions[i][kind].byteSpan;
+    if(!before.subarray(...from).equals(after.subarray(...to))) return [whole];
+    anchors.push([from,to]);
   }
-  pairs.push([bk.length - tail, ak.length - tail]);
-  const splices = [];
-  const offset = (spans, i, size) => i < spans.length ? spans[i][0] : size;
-  let bi = head, ai = head;
-  for (const [pb, pa] of pairs) {
-    if (pb > bi || pa > ai) {
-      const start = offset(bl, bi, before.length), end = offset(bl, pb, before.length);
-      const inserted = after.subarray(offset(al, ai, after.length), offset(al, pa, after.length));
-      splices.push({start, end, insertBase64: inserted.toString('base64')});
-    }
-    bi = pb + 1; ai = pa + 1;
+  anchors.push([[before.length,before.length],[after.length,after.length]]);
+  const splices=[];let bs=0,as=0;
+  for(const [from,to] of anchors) {
+    const gap=changedGap(before,after,bs,from[0],as,to[0]);
+    if(gap)splices.push(gap);
+    bs=from[1];as=to[1];
   }
   return splices;
 }
-export function compare(beforeInput, afterInput) {
-  return evaluate(beforeInput, diffSplices(beforeInput, afterInput));
+export function compare(beforeInput, afterInput, options) {
+  const before=Buffer.isBuffer(beforeInput) ? beforeInput : Buffer.from(beforeInput);
+  const after=Buffer.isBuffer(afterInput) ? afterInput : Buffer.from(afterInput);
+  if (before.equals(after)) return evaluate(before,[],'working',options);
+  const gap=changedGap(before,after,0,before.length,0,after.length);
+  const fast=evaluate(before,[gap],'working',options);
+  return fast.rule === 'marker_span_touched'
+    ? evaluate(before,diffSplices(before,after,options),'working',options) : fast;
 }
 
-function pullRequest(base) {
-  const git = (...args) => execFileSync('git', args, { maxBuffer: 1 << 30 });
-  const listed = git('diff', '--name-status', '-z', '-M', base, 'HEAD', '--', ':(icase)*.md', ':(icase)*.markdown').toString('utf8').split('\0');
-  let refused = 0;
-  const say = (file, line, words) => { refused++; process.stdout.write('::error file=' + file + (line ? ',line=' + line : '') + '::' + words + '\n'); };
-  for (let i = 0; i < listed.length - 1;) {
-    const status = listed[i++], from = listed[i++], to = status[0] === 'R' || status[0] === 'C' ? listed[i++] : from;
-    if (status[0] === 'A' || status[0] === 'C') continue;
-    const before = git('show', base + ':' + from);
-    if (status[0] === 'D') {
-      const parsed = parse(before);
-      if (parsed.faulted || parsed.regions.some(r => r.law !== 'edit')) say(from, 0, 'this file kept or appended regions and was removed');
-      continue;
-    }
-    const verdict = compare(before, git('show', 'HEAD:' + to));
-    if (verdict.outcome === 'applied') continue;
-    const region = Number.isInteger(verdict.region) ? parse(before).regions[verdict.region] : null;
-    const words = verdict.rule === 'law_violated' ? (verdict.law === 'keep' ? 'a region marked keep was changed' : 'a region marked append was changed other than at its end')
-      : verdict.rule === 'before_faulted' ? 'the base version\'s markers cannot be read exactly, so the whole file is keep'
-      : 'the will markers were changed (' + verdict.rule + ')';
-    say(to, region ? region.opener.line + 1 : 0, words);
+const SEAL_DOMAIN = 'will/1 seal/1 sha256-128\0';
+function documentBytes(input) {
+  if (typeof input === 'string' ? !input.isWellFormed() : !(input instanceof Uint8Array))
+    throw new TypeError('document must be a scalar string or Uint8Array');
+  return Buffer.isBuffer(input) ? input : Buffer.from(input);
+}
+function sealDigest(law, bytes) {
+  return createHash('sha256').update(SEAL_DOMAIN + law + '\0' + bytes.length + '\0')
+    .update(bytes).digest('hex').slice(0, 32);
+}
+function readSeal(intent) {
+  const at = (intent ?? '').indexOf('[seal/');
+  if (at < 0) return {present: false};
+  const bad = reason => ({present: true, reason});
+  if ((at && intent[at - 1] !== ' ') || intent.indexOf('[seal/', at + 1) >= 0) return bad('malformed_seal');
+  const match = /^\[seal\/([^ ]+) ([^:]+):([^:]+):([^\]]*)\]$/.exec(intent.slice(at));
+  if (!match) return bad('malformed_seal');
+  const [, version, algorithm, count, digest] = match;
+  if (version !== '1' || algorithm !== 'sha256-128') return bad('unsupported_seal');
+  if (!/^(?:0|[1-9][0-9]*)$/.test(count) || !Number.isSafeInteger(Number(count)) || !/^[0-9a-f]{32}$/.test(digest))
+    return bad('malformed_seal');
+  return {present: true, bytes: Number(count), digest};
+}
+function verifyParsedSeals(buf, parsed) {
+  const regions = parsed.regions.map(region => {
+    const result = {region: region.index, law: region.law};
+    const unsealed = reason => ({...result, status: 'unsealed', reason});
+    if (parsed.faulted) return unsealed('document_faulted');
+    const seal = readSeal(region.intent);
+    if (!seal.present) return unsealed('absent');
+    if (seal.reason) return unsealed(seal.reason);
+    if (region.law === 'edit') return unsealed('unsupported_law');
+    const governed = buf.subarray(...region.governedSpan);
+    const content = region.law === 'append' ? stripOneTrailingTerminator(governed) : governed;
+    const changed = reason => ({...result, status: 'changed', reason, sealedBytes: seal.bytes});
+    if (content.length < seal.bytes || (region.law === 'keep' && content.length !== seal.bytes))
+      return changed('length_mismatch');
+    if (sealDigest(region.law, content.subarray(0, seal.bytes)) !== seal.digest) return changed('digest_mismatch');
+    return {...result, status: 'intact', sealedBytes: seal.bytes};
+  });
+  return {faulted: parsed.faulted, faults: parsed.faults, regions};
+}
+
+export function verifySeals(bytesInput, options) {
+  const buf = documentBytes(bytesInput);
+  return verifyParsedSeals(buf, parse(buf,options));
+}
+
+export function seal(bytesInput, options) {
+  const buf = documentBytes(bytesInput), parsed = parse(buf,options);
+  const fail = (code, region) => {
+    throw Object.assign(new Error(code.replaceAll('_', ' ') + (region === undefined ? '' : ' in region ' + region)),
+      {code, ...(region === undefined ? {} : {region})});
+  };
+  if (parsed.faulted) fail('faulted_document');
+  const checks = verifyParsedSeals(buf, parsed).regions, splices = [];
+  for (const region of parsed.regions) {
+    const check = checks[region.index];
+    if (check.status === 'intact') continue;
+    if (check.status === 'changed') fail('changed_seal', region.index);
+    if (check.reason !== 'absent') fail(check.reason, region.index);
+    if (region.law === 'edit') continue;
+    const governed = buf.subarray(...region.governedSpan);
+    const content = region.law === 'append' ? stripOneTrailingTerminator(governed) : governed;
+    const tag = '[seal/1 sha256-128:' + content.length + ':' + sealDigest(region.law, content) + ']';
+    const intent = region.intent === null ? tag : region.intent + ' ' + tag;
+    if (scalarCount(intent) > INTENT_MAX_SCALARS) fail('intent_over_bound', region.index);
+    const [start, end] = region.opener.byteSpan;
+    const raw = stripOneTrailingTerminator(buf.subarray(start,end)).toString('utf8');
+    const carrier = markerLine(raw,bindingOf(options));
+    splices.push({start, end: start + stripOneTrailingTerminator(buf.subarray(start, end)).length,
+      insert: Buffer.from(raw.slice(0,carrier.start) + 'will/1 ' + region.law + ': ' + intent + raw.slice(carrier.end))});
   }
-  if (!refused) process.stdout.write('will: every changed Markdown file keeps its will\n');
-  return refused ? 1 : 0;
+  return applySplices(buf, splices);
+}
+
+export function strip(bytesInput, options) {
+  const buf = documentBytes(bytesInput), parsed = parse(buf, options);
+  if (parsed.faulted) throw Object.assign(new Error('faulted document'), {code: 'faulted_document'});
+  const splices = parsed.regions.flatMap(({opener, closer}) => [opener, closer].map(({byteSpan: [start, end]}) =>
+    ({start, end, insert: Buffer.alloc(0)})));
+  return {bytes: applySplices(buf, splices), removed: splices.length};
 }
 
 
@@ -463,13 +531,28 @@ function requestBytes(v, name) {
 function runRequest(v) {
   if (v === null || typeof v !== 'object' || Array.isArray(v)) throw new Error('request must be an object');
   if (Object.hasOwn(v, 'id') && !(typeof v.id === 'string' && v.id.isWellFormed())) throw new Error('id must be a scalar string');
-  if (v.kind === 'parse') return parse(requestBytes(v, 'doc'));
+  const options = v.binding === undefined ? undefined : {binding:v.binding};
+  bindingOf(options);
+  if (v.kind === 'parse') return parse(requestBytes(v, 'doc'),options);
+  if (v.kind === 'verify') return verifySeals(requestBytes(v, 'doc'),options);
+  if (v.kind === 'seal' || v.kind === 'strip') {
+    const doc = requestBytes(v, 'doc');
+    try {
+      if (v.kind === 'seal') return {docBase64: seal(doc,options).toString('base64')};
+      const result = strip(doc,options);
+      return {docBase64: result.bytes.toString('base64'), removed: result.removed};
+    }
+    catch (error) {
+      if (!error.code) throw error;
+      return {error: error.code, ...(error.region === undefined ? {} : {region: error.region})};
+    }
+  }
   if (v.kind !== 'evaluate') throw new Error('kind must be parse or evaluate');
   const before = requestBytes(v, 'before');
   if (!Object.hasOwn(v, 'path')) throw new Error('path is required');
-  return evaluate(before, v.splices, v.path);
+  return evaluate(before, v.splices, v.path,options);
 }
-const exactJSON = text => JSON.parse(text, (key, value, context) =>
+export const exactJSON = text => JSON.parse(text, (key, value, context) =>
   typeof value === 'number' && !/^-?\d{1,15}$/.test(context.source) ? new JSONNumber(context.source) : value);
 
 function deepEqualStrict(got, want) {
@@ -497,7 +580,7 @@ function runCheck(vectorsPath) {
   const spec = exactJSON(readFileSync(vectorsPath, 'utf8'));
   let pass = 0, fail = 0;
   const failures = [];
-  for (const v of spec.vectors) {
+  for (const v of [...spec.vectors, ...(spec.sealVectors ?? []), ...(spec.textVectors ?? []), ...(spec.stripVectors ?? [])]) {
     const result = checkCase(v);
     if (result.ok) pass++;
     else { fail++; failures.push(`FAIL ${v.id}: got ${JSON.stringify(result.got)}`); }
@@ -510,12 +593,12 @@ function runCheck(vectorsPath) {
 
 export function checkVectors(spec) {
   if (typeof spec === 'string') spec = exactJSON(spec);
-  const failures = [];
-  for (const v of spec.vectors) {
+  const failures = [], vectors = [...spec.vectors, ...(spec.sealVectors ?? []), ...(spec.textVectors ?? []), ...(spec.stripVectors ?? [])];
+  for (const v of vectors) {
     const result = checkCase(v);
     if (!result.ok) failures.push({id: v.id, got: result.got});
   }
-  return {total: spec.vectors.length, failures};
+  return {total: vectors.length, failures};
 }
 
 async function runAdapter() {
@@ -545,28 +628,48 @@ function readBytesArg(pathArg) {
 }
 
 const argv = process.argv.slice(2);
+const fileOptions = file => {
+  const at=argv.indexOf('--binding');
+  if(at===-1) return {binding:file==='-' ? 'markdown' : bindingForFile(file)};
+  const binding=argv[at+1];
+  if(argv.indexOf('--binding',at+1)!==-1 || (binding!=='markdown' && binding!=='text'))
+    throw new TypeError('--binding needs exactly one value: markdown or text');
+  return {binding};
+};
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   if (argv[0] === 'parse' && argv[1]) {
-    console.log(JSON.stringify(parse(readBytesArg(argv[1])), null, 2));
+    console.log(JSON.stringify(parse(readBytesArg(argv[1]),fileOptions(argv[1])), null, 2));
+  } else if (argv[0] === 'seal' && argv[1]) {
+    try { process.stdout.write(seal(readBytesArg(argv[1]),fileOptions(argv[1]))); }
+    catch (error) { console.error('will: ' + error.message); process.exitCode = 1; }
+  } else if (argv[0] === 'strip' && argv[1]) {
+    try {
+      const result = strip(readBytesArg(argv[1]),fileOptions(argv[1]));
+      process.stdout.write(result.bytes);
+      console.error(JSON.stringify({removed: result.removed}));
+    } catch (error) { console.error('will: ' + error.message); process.exitCode = 1; }
+  } else if (argv[0] === 'verify' && argv[1]) {
+    const result = verifySeals(readBytesArg(argv[1]),fileOptions(argv[1]));
+    console.log(JSON.stringify(result, null, 2));
+    process.exitCode = result.faulted || result.regions.some(r => r.status === 'changed' ||
+      (r.status === 'unsealed' && r.reason !== 'absent')) ? 1 : 0;
   } else if (argv[0] === 'evaluate' && argv[1] && argv[2]) {
     const path = argv.includes('--authoring') ? 'authoring' : 'working';
     const before = readBytesArg(argv[1]);
     const splices = exactJSON(readFileSync(argv[2], 'utf8'));
-    console.log(JSON.stringify(evaluate(before, splices, path), null, 2));
+    console.log(JSON.stringify(evaluate(before, splices, path,fileOptions(argv[1])), null, 2));
   } else if (argv[0] === 'check' && argv[1]) {
     process.exit(runCheck(argv[1]));
   } else if (argv[0] === 'compare' && argv[1] && argv[2]) {
-    const verdict = compare(readBytesArg(argv[1]), readBytesArg(argv[2]));
+    const verdict = compare(readBytesArg(argv[1]), readBytesArg(argv[2]),fileOptions(argv[1]));
     console.log(JSON.stringify(verdict, null, 2));
     process.exit(verdict.outcome === 'applied' ? 0 : 1);
-  } else if (argv[0] === 'pr' && argv[1]) {
-    process.exit(pullRequest(argv[1]));
   } else if (argv[0] === '--adapter') {
     await runAdapter();
   } else {
     console.error(
       'usage: will.mjs parse <file>|- | evaluate <before>|- <splices.json> [--authoring] | ' +
-      'check <vectors.json> | compare <before> <after> | pr <base-commit> | --adapter\n' +
+      'check <vectors.json> | compare <before> <after> | seal <file>|- | verify <file>|- | strip <file>|- | --adapter\n' +
       '  "-" reads fd 0 (stdin) portably.\n' +
       '  check compares this reference implementation against vectors.json exactly, key for ' +
       'key — a stray field is a failure, never ignored.\n' +

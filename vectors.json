@@ -3082,5 +3082,1827 @@
         "law": "append"
       }
     }
+  ],
+  "sealVectors": [
+    {
+      "id": "SEAL-WRITE-KEEP",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg=="
+      }
+    },
+    {
+      "id": "SEAL-WRITE-APPEND",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kIC0tPgpBCgo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MjowYWE3ZjBhZTY3ZDYyMzhiODBhMzQzODBmMTc3OWMwOV0gLS0+CkEKCjwhLS0gL3dpbGwgLS0+Cg=="
+      }
+    },
+    {
+      "id": "SEAL-KEEP-INTENT-SPACES",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogICBSZXRhaW4gdGhpcy4gICAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "docBase64": "PCEtLSB3aWxsLzEga2VlcDogICBSZXRhaW4gdGhpcy4gICBbc2VhbC8xIHNoYTI1Ni0xMjg6MjoyYjA1NGY0YjEzMjI5NjQxYWNjNGNkYjlmYTQ2YTRlYV0gLS0+CkEKPCEtLSAvd2lsbCAtLT4K"
+      }
+    },
+    {
+      "id": "SEAL-IDEMPOTENT",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg=="
+      }
+    },
+    {
+      "id": "SEAL-APPEND-NO-ADVANCE",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MToyOGQ5YjVlZTBhNGQzYmQyNGRhZDA3YzFiMDFkNzUxOV0gLS0+CkFCCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MToyOGQ5YjVlZTBhNGQzYmQyNGRhZDA3YzFiMDFkNzUxOV0gLS0+CkFCCjwhLS0gL3dpbGwgLS0+Cg=="
+      }
+    },
+    {
+      "id": "SEAL-EDIT-UNSEALED",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEgZWRpdCAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "docBase64": "PCEtLSB3aWxsLzEgZWRpdCAtLT4KQQo8IS0tIC93aWxsIC0tPgo="
+      }
+    },
+    {
+      "id": "SEAL-INTACT",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "intact",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-ABSENT",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "unsealed",
+            "reason": "absent"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-EMPTY-KEEP",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjA6MTM0YTg3NjVlN2Y1YjRkMTk5ZDBmZDQzNTNlYmZmMzNdIC0tPgo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "intact",
+            "sealedBytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-EMPTY-APPEND",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MDphMDRkMWU1YWE0ZGRjNGM4YjA3M2ZhYzY2MmUzNjUzNF0gLS0+CjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "intact",
+            "sealedBytes": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-BODY-CHANGE",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpCCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "changed",
+            "reason": "digest_mismatch",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-KEEP-GROWTH",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBQgo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "changed",
+            "reason": "length_mismatch",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-KEEP-SHORTEN",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "changed",
+            "reason": "length_mismatch",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-KEEP-CRLF",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjM6MDk0ZWRhN2NiMDIzZGNjNzEwNDViYTVmYTRiOGZmMzhdIC0tPg0KQQ0KPCEtLSAvd2lsbCAtLT4NCg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "intact",
+            "sealedBytes": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-KEEP-CR",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MTE1NzMxYmUxNjI4MWJjMzQyNzU5ZGFmNzBmOGM4OWJdIC0tPg1BDTwhLS0gL3dpbGwgLS0+DQ==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "intact",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-KEEP-EOL-CHANGED",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjM6MDk0ZWRhN2NiMDIzZGNjNzEwNDViYTVmYTRiOGZmMzhdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "changed",
+            "reason": "length_mismatch",
+            "sealedBytes": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-APPEND-SAME-LINE",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MToyOGQ5YjVlZTBhNGQzYmQyNGRhZDA3YzFiMDFkNzUxOV0gLS0+CkFCCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "intact",
+            "sealedBytes": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-APPEND-NEXT-LINE",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MToyOGQ5YjVlZTBhNGQzYmQyNGRhZDA3YzFiMDFkNzUxOV0gLS0+CkEKQgo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "intact",
+            "sealedBytes": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-APPEND-CHANGE",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MToyOGQ5YjVlZTBhNGQzYmQyNGRhZDA3YzFiMDFkNzUxOV0gLS0+CkIKPCEtLSAvd2lsbCAtLT4K",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "changed",
+            "reason": "digest_mismatch",
+            "sealedBytes": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-APPEND-CONTENT-TERMINATOR-LF",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MjowYWE3ZjBhZTY3ZDYyMzhiODBhMzQzODBmMTc3OWMwOV0gLS0+CkEKPCEtLSAvd2lsbCAtLT4K",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "changed",
+            "reason": "length_mismatch",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-APPEND-CONTENT-TERMINATOR-CR",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6Mjo1YzJiMmRlN2Y1ZjNjZmExOGQ0OGY0NjY3NTJiYzU1MF0gLS0+DUENPCEtLSAvd2lsbCAtLT4N",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "changed",
+            "reason": "length_mismatch",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-APPEND-CONTENT-TERMINATOR-CRLF",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MzozMGJmYmEyZmJjMWQ0OWM5ZmVlMDYwZWFhNDBlMWY2Zl0gLS0+DQpBDQo8IS0tIC93aWxsIC0tPg0K",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "changed",
+            "reason": "length_mismatch",
+            "sealedBytes": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-APPEND-CARRIER-CHANGE",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MToyOGQ5YjVlZTBhNGQzYmQyNGRhZDA3YzFiMDFkNzUxOV0gLS0+CkENCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "intact",
+            "sealedBytes": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-UTF8",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4Ojk6NmEyNmU2NjA5ZDJlMmYxNjliYWU4MDU0NTU4MTgzZGRdIC0tPgplzIEg8J+mgQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "intact",
+            "sealedBytes": 9
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-NO-UNICODE-NORMALIZATION",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjQ6YTNjYTJhZDAzZjkwMTQ3ZGFlYjY4ZTBhMDRlOTYyZGNdIC0tPgrDqQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "changed",
+            "reason": "length_mismatch",
+            "sealedBytes": 4
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-LAW-BOUND",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MjoyYjA1NGY0YjEzMjI5NjQxYWNjNGNkYjlmYTQ2YTRlYV0gLS0+CkEKPCEtLSAvd2lsbCAtLT4K",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "changed",
+            "reason": "length_mismatch",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-LAW-DIGEST-BOUND",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MjoyYjA1NGY0YjEzMjI5NjQxYWNjNGNkYjlmYTQ2YTRlYV0gLS0+CkEKQgo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "append",
+            "status": "changed",
+            "reason": "digest_mismatch",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-DIGEST-DAMAGE",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDBdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "changed",
+            "reason": "digest_mismatch",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-MALFORMED",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6YnJva2VuXSAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "unsealed",
+            "reason": "malformed_seal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-TRUNCATED",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAgLS0+CkEKPCEtLSAvd2lsbCAtLT4K",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "unsealed",
+            "reason": "malformed_seal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-DUPLICATE",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIFtzZWFsLzEgc2hhMjU2LTEyODoyOjJiMDU0ZjRiMTMyMjk2NDFhY2M0Y2RiOWZhNDZhNGVhXSAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "unsealed",
+            "reason": "malformed_seal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-MISPLACED",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIE1vcmUuIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "unsealed",
+            "reason": "malformed_seal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-UNSUPPORTED-VERSION",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMiBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "unsealed",
+            "reason": "unsupported_seal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-UNSUPPORTED-DIGEST",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGE1MTItMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "unsealed",
+            "reason": "unsupported_seal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-NONCANONICAL-LENGTH",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjAyOjJiMDU0ZjRiMTMyMjk2NDFhY2M0Y2RiOWZhNDZhNGVhXSAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "unsealed",
+            "reason": "malformed_seal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-UNSAFE-LENGTH",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjkwMDcxOTkyNTQ3NDA5OTI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "unsealed",
+            "reason": "malformed_seal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-EDIT-CARRIER",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEgZWRpdDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "edit",
+            "status": "unsealed",
+            "reason": "unsupported_law"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-OUTSIDE-CHANGE",
+      "kind": "verify",
+      "docBase64": "TmV3Lgo8IS0tIHdpbGwvMSBrZWVwOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MjoyYjA1NGY0YjEzMjI5NjQxYWNjNGNkYjlmYTQ2YTRlYV0gLS0+CkEKPCEtLSAvd2lsbCAtLT4K",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "intact",
+            "sealedBytes": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-MULTIPLE-REGIONS",
+      "kind": "verify",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+CjwhLS0gd2lsbC8xIGVkaXQgLS0+CkEKPCEtLSAvd2lsbCAtLT4KPCEtLSB3aWxsLzEgYXBwZW5kOiBbc2VhbC8xIHNoYTI1Ni0xMjg6MToyOGQ5YjVlZTBhNGQzYmQyNGRhZDA3YzFiMDFkNzUxOV0gLS0+CkEKPCEtLSAvd2lsbCAtLT4K",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "region": 0,
+            "law": "keep",
+            "status": "intact",
+            "sealedBytes": 2
+          },
+          {
+            "region": 1,
+            "law": "edit",
+            "status": "unsealed",
+            "reason": "absent"
+          },
+          {
+            "region": 2,
+            "law": "append",
+            "status": "intact",
+            "sealedBytes": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEAL-REFUSE-CHANGE",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpCCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "error": "changed_seal",
+        "region": 0
+      }
+    },
+    {
+      "id": "SEAL-REFUSE-MALFORMED",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBub3BlXSAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "error": "malformed_seal",
+        "region": 0
+      }
+    },
+    {
+      "id": "SEAL-REFUSE-UNSUPPORTED",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMiBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "error": "unsupported_seal",
+        "region": 0
+      }
+    },
+    {
+      "id": "SEAL-ATOMIC-REFUSAL",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KQQo8IS0tIC93aWxsIC0tPgo8IS0tIHdpbGwvMSBrZWVwOiBbc2VhbC8xIG5vcGVdIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "error": "malformed_seal",
+        "region": 1
+      }
+    },
+    {
+      "id": "SEAL-REFUSE-OVERFLOW",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHggLS0+CkEKPCEtLSAvd2lsbCAtLT4K",
+      "expect": {
+        "error": "intent_over_bound",
+        "region": 0
+      }
+    },
+    {
+      "id": "SEAL-EXACT-INTENT-BOUND",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "docBase64": "PCEtLSB3aWxsLzEga2VlcDogeHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCBbc2VhbC8xIHNoYTI1Ni0xMjg6MjoyYjA1NGY0YjEzMjI5NjQxYWNjNGNkYjlmYTQ2YTRlYV0gLS0+CkEKPCEtLSAvd2lsbCAtLT4K"
+      }
+    },
+    {
+      "id": "SEAL-UNICODE-INTENT-BOUND",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDog8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgSAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "docBase64": "PCEtLSB3aWxsLzEga2VlcDog8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgfCfpoHwn6aB8J+mgSBbc2VhbC8xIHNoYTI1Ni0xMjg6MjoyYjA1NGY0YjEzMjI5NjQxYWNjNGNkYjlmYTQ2YTRlYV0gLS0+CkEKPCEtLSAvd2lsbCAtLT4K"
+      }
+    },
+    {
+      "id": "SEAL-FAULTED-DOCUMENT",
+      "kind": "seal",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KQQo=",
+      "expect": {
+        "error": "faulted_document"
+      }
+    },
+    {
+      "id": "SEAL-INVALID-UTF8",
+      "kind": "verify",
+      "docBase64": "/w==",
+      "expect": {
+        "faulted": true,
+        "faults": [
+          {
+            "mode": "invalid_utf8",
+            "line": null,
+            "byteSpan": [
+              0,
+              1
+            ]
+          }
+        ],
+        "regions": []
+      }
+    }
+  ],
+  "textVectors": [
+    {
+      "id": "TEXT-hash",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "# will/1 keep\nKeep this.\n# /will\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                14
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                25,
+                33
+              ]
+            },
+            "governedSpan": [
+              14,
+              25
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-slash",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "// will/1 keep\nKeep this.\n// /will\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                15
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                26,
+                35
+              ]
+            },
+            "governedSpan": [
+              15,
+              26
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-dash",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "-- will/1 keep\nKeep this.\n-- /will\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                15
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                26,
+                35
+              ]
+            },
+            "governedSpan": [
+              15,
+              26
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-semicolon",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "; will/1 keep\nKeep this.\n; /will\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                14
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                25,
+                33
+              ]
+            },
+            "governedSpan": [
+              14,
+              25
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-percent",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "% will/1 keep\nKeep this.\n% /will\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                14
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                25,
+                33
+              ]
+            },
+            "governedSpan": [
+              14,
+              25
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-bare",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "will/1 keep\nKeep this.\n/will\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                12
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                23,
+                29
+              ]
+            },
+            "governedSpan": [
+              12,
+              23
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-html",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "<!-- will/1 keep -->\nKeep this.\n<!-- /will -->\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                21
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                32,
+                47
+              ]
+            },
+            "governedSpan": [
+              21,
+              32
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-block",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "/* will/1 keep */\nKeep this.\n/* /will */\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                18
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                29,
+                41
+              ]
+            },
+            "governedSpan": [
+              18,
+              29
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-padding",
+      "kind": "parse",
+      "binding": "text",
+      "doc": " \t//\t will/1 keep \t\ncafé 🐈\n \t// /will  \n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                20
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                31,
+                44
+              ]
+            },
+            "governedSpan": [
+              20,
+              31
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-crlf",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "  # will/1 append: Approved by Alex on 2026-11-13.\r\nA\r\n  # /will\r\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "append",
+            "intent": "Approved by Alex on 2026-11-13.",
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                52
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                55,
+                66
+              ]
+            },
+            "governedSpan": [
+              52,
+              55
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-cr",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "/* will/1 edit */\rx\r// /will\r",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "edit",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                18
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                20,
+                29
+              ]
+            },
+            "governedSpan": [
+              18,
+              20
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-mixed",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "# will/1 keep\nx\n-- /will\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": [
+          {
+            "index": 0,
+            "law": "keep",
+            "intent": null,
+            "opener": {
+              "line": 0,
+              "byteSpan": [
+                0,
+                14
+              ]
+            },
+            "closer": {
+              "line": 2,
+              "byteSpan": [
+                16,
+                25
+              ]
+            },
+            "governedSpan": [
+              14,
+              16
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-inline",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "const rule = \"// will/1 keep\";\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": []
+      }
+    },
+    {
+      "id": "TEXT-quote",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "`// will/1 keep`\n`// /will`\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": []
+      }
+    },
+    {
+      "id": "TEXT-prose",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "Example: # will/1 keep\nExample: # /will\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": []
+      }
+    },
+    {
+      "id": "TEXT-block-stars",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "/*\n * will/1 keep\n * /will\n */\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": []
+      }
+    },
+    {
+      "id": "TEXT-near-word",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "# willingness matters\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": []
+      }
+    },
+    {
+      "id": "TEXT-markdown-hash",
+      "kind": "parse",
+      "binding": "markdown",
+      "doc": "# will/1 keep\nx\n# /will\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": []
+      }
+    },
+    {
+      "id": "TEXT-markdown-indent",
+      "kind": "parse",
+      "binding": "markdown",
+      "doc": " <!-- will/1 keep -->\nx\n <!-- /will -->\n",
+      "expect": {
+        "faulted": false,
+        "faults": [],
+        "regions": []
+      }
+    },
+    {
+      "id": "TEXT-version",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "// will/2 keep\n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "unknown_version",
+            "line": 0,
+            "byteSpan": [
+              0,
+              15
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-unknown-law",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "# will/1 freeze\n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "unknown_law",
+            "line": 0,
+            "byteSpan": [
+              0,
+              16
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-empty-intent",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "; will/1 keep: \n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "malformed_marker",
+            "line": 0,
+            "byteSpan": [
+              0,
+              16
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-block-unclosed",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "/* will/1 keep\n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "malformed_marker",
+            "line": 0,
+            "byteSpan": [
+              0,
+              15
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-block-trailing",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "/* will/1 keep */ code\n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "malformed_marker",
+            "line": 0,
+            "byteSpan": [
+              0,
+              23
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-block-embedded",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "/* will/1 keep: x */ x */\n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "malformed_marker",
+            "line": 0,
+            "byteSpan": [
+              0,
+              26
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-delimiter",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "<!-- will/1 keep --> code\n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "malformed_marker",
+            "line": 0,
+            "byteSpan": [
+              0,
+              26
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-stray-close",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "   // /will\n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "unpaired_marker",
+            "line": 0,
+            "byteSpan": [
+              0,
+              12
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-unpaired",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "// will/1 keep\nx\n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "unpaired_marker",
+            "line": 0,
+            "byteSpan": [
+              0,
+              15
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-law-space",
+      "kind": "parse",
+      "binding": "text",
+      "doc": "# will/1  keep\n",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "malformed_marker",
+            "line": 0,
+            "byteSpan": [
+              0,
+              15
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-keep-change",
+      "kind": "evaluate",
+      "binding": "text",
+      "before": "// will/1 keep\nexact\n// /will\n",
+      "path": "working",
+      "splices": [
+        {
+          "start": 15,
+          "end": 20,
+          "insert": "other"
+        }
+      ],
+      "expect": {
+        "outcome": "refused",
+        "reason": "document_law",
+        "rule": "law_violated",
+        "region": 0,
+        "law": "keep"
+      }
+    },
+    {
+      "id": "TEXT-keep-outside",
+      "kind": "evaluate",
+      "binding": "text",
+      "before": "// will/1 keep\nexact\n// /will\n",
+      "path": "working",
+      "splices": [
+        {
+          "start": 30,
+          "end": 30,
+          "insert": "tail\n"
+        }
+      ],
+      "expect": {
+        "outcome": "applied"
+      }
+    },
+    {
+      "id": "TEXT-marker-rewrite",
+      "kind": "evaluate",
+      "binding": "text",
+      "before": "// will/1 keep\nexact\n// /will\n",
+      "path": "working",
+      "splices": [
+        {
+          "start": 0,
+          "end": 14,
+          "insert": "// will/1 keep\n"
+        }
+      ],
+      "expect": {
+        "outcome": "refused",
+        "reason": "document_law",
+        "rule": "marker_span_touched",
+        "region": 0,
+        "law": "keep"
+      }
+    },
+    {
+      "id": "TEXT-marker-silenced",
+      "kind": "evaluate",
+      "binding": "text",
+      "before": "// will/1 keep\nexact\n// /will\n",
+      "path": "working",
+      "splices": [
+        {
+          "start": 0,
+          "end": 0,
+          "insert": "x"
+        }
+      ],
+      "expect": {
+        "outcome": "refused",
+        "reason": "document_law",
+        "rule": "result_faulted",
+        "faults": [
+          {
+            "mode": "unpaired_marker",
+            "line": 2,
+            "byteSpan": [
+              22,
+              31
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT-append-add",
+      "kind": "evaluate",
+      "binding": "text",
+      "before": "# will/1 append\nfirst\n# /will\n",
+      "path": "working",
+      "splices": [
+        {
+          "start": 21,
+          "end": 21,
+          "insert": "\nsecond"
+        }
+      ],
+      "expect": {
+        "outcome": "applied"
+      }
+    },
+    {
+      "id": "TEXT-append-rewrite",
+      "kind": "evaluate",
+      "binding": "text",
+      "before": "# will/1 append\nfirst\n# /will\n",
+      "path": "working",
+      "splices": [
+        {
+          "start": 16,
+          "end": 21,
+          "insert": "other"
+        }
+      ],
+      "expect": {
+        "outcome": "refused",
+        "reason": "document_law",
+        "rule": "law_violated",
+        "region": 0,
+        "law": "append"
+      }
+    },
+    {
+      "id": "TEXT-invalid-utf8",
+      "kind": "parse",
+      "binding": "text",
+      "docBase64": "/w==",
+      "expect": {
+        "faulted": true,
+        "regions": [],
+        "faults": [
+          {
+            "mode": "invalid_utf8",
+            "line": null,
+            "byteSpan": [
+              0,
+              1
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "stripVectors": [
+    {
+      "id": "STRIP-EMPTY-DOCUMENT",
+      "kind": "strip",
+      "docBase64": "",
+      "expect": {
+        "docBase64": "",
+        "removed": 0
+      }
+    },
+    {
+      "id": "STRIP-UNMARKED-EXACT",
+      "kind": "strip",
+      "docBase64": "ICBBCQ0KDUIKQyAg",
+      "expect": {
+        "docBase64": "ICBBCQ0KDUIKQyAg",
+        "removed": 0
+      }
+    },
+    {
+      "id": "STRIP-KEEP",
+      "kind": "strip",
+      "docBase64": "QmVmb3JlLgo8IS0tIHdpbGwvMSBrZWVwIC0tPgogQQkgCjwhLS0gL3dpbGwgLS0+CkFmdGVyLgo=",
+      "expect": {
+        "docBase64": "QmVmb3JlLgogQQkgCkFmdGVyLgo=",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-APPEND",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEgYXBwZW5kOiBBZGQgYXQgdGhlIGVuZC4gLS0+CkEKQgo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "docBase64": "QQpCCg==",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-EDIT",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEgZWRpdCAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "docBase64": "QQo=",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-ALL-LAWS-MULTIPLE",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KQQo8IS0tIC93aWxsIC0tPgoKPCEtLSB3aWxsLzEgYXBwZW5kIC0tPgpCCjwhLS0gL3dpbGwgLS0+Cgo8IS0tIHdpbGwvMSBlZGl0IC0tPgpDCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "docBase64": "QQoKQgoKQwo=",
+        "removed": 6
+      }
+    },
+    {
+      "id": "STRIP-EMPTY-REGION",
+      "kind": "strip",
+      "docBase64": "QmVmb3JlLgo8IS0tIHdpbGwvMSBrZWVwIC0tPgo8IS0tIC93aWxsIC0tPgpBZnRlci4K",
+      "expect": {
+        "docBase64": "QmVmb3JlLgpBZnRlci4K",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-BLANKS-STAY",
+      "kind": "strip",
+      "docBase64": "CjwhLS0gd2lsbC8xIGtlZXAgLS0+CgpBCgo8IS0tIC93aWxsIC0tPgoK",
+      "expect": {
+        "docBase64": "CgpBCgoK",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-CLOSER-EOF",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KQQo8IS0tIC93aWxsIC0tPg==",
+      "expect": {
+        "docBase64": "QQo=",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-ONLY-EMPTY-PAIR-EOF",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KPCEtLSAvd2lsbCAtLT4=",
+      "expect": {
+        "docBase64": "",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-CRLF",
+      "kind": "strip",
+      "docBase64": "QmVmb3JlLg0KPCEtLSB3aWxsLzEga2VlcCAtLT4NCiBBCSANCjwhLS0gL3dpbGwgLS0+DQpBZnRlci4NCg==",
+      "expect": {
+        "docBase64": "QmVmb3JlLg0KIEEJIA0KQWZ0ZXIuDQo=",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-CR",
+      "kind": "strip",
+      "docBase64": "QmVmb3JlLg08IS0tIHdpbGwvMSBrZWVwIC0tPg0gQQkgDTwhLS0gL3dpbGwgLS0+DUFmdGVyLg0=",
+      "expect": {
+        "docBase64": "QmVmb3JlLg0gQQkgDUFmdGVyLg0=",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-MIXED-TERMINATORS",
+      "kind": "strip",
+      "docBase64": "QmVmb3JlLg0KPCEtLSB3aWxsLzEga2VlcCAtLT4NQQpCDQo8IS0tIC93aWxsIC0tPgpBZnRlci4N",
+      "expect": {
+        "docBase64": "QmVmb3JlLg0KQQpCDQpBZnRlci4N",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-UNICODE",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogw6kg8J+mgSAtLT4Kw6nigKhlzIHigKnwn6aBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "docBase64": "w6nigKhlzIHigKnwn6aBCg==",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-SEALED",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogRG8gbm90IGNoYW5nZSB0aGlzLiBbc2VhbC8xIHNoYTI1Ni0xMjg6MjoyYjA1NGY0YjEzMjI5NjQxYWNjNGNkYjlmYTQ2YTRlYV0gLS0+CkEKPCEtLSAvd2lsbCAtLT4K",
+      "expect": {
+        "docBase64": "QQo=",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-CHANGED-SEAL-INTENTIONAL",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMSBzaGEyNTYtMTI4OjI6MmIwNTRmNGIxMzIyOTY0MWFjYzRjZGI5ZmE0NmE0ZWFdIC0tPgpCCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "docBase64": "Qgo=",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-UNREADABLE-SEAL-INTENTIONAL",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcDogW3NlYWwvMiBicm9rZW5dIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "docBase64": "QQo=",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-QUOTED-INDENTED-UNCHANGED",
+      "kind": "strip",
+      "docBase64": "IDwhLS0gd2lsbC8xIGtlZXAgLS0+CiBRdW90ZWQuCiA8IS0tIC93aWxsIC0tPgo+IDwhLS0gd2lsbC8xIGtlZXAgLS0+Cj4gUXVvdGVkLgo+IDwhLS0gL3dpbGwgLS0+Cgk8IS0tIHdpbGwvMSBrZWVwIC0tPgoJSW5kZW50ZWQuCgk8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "docBase64": "IDwhLS0gd2lsbC8xIGtlZXAgLS0+CiBRdW90ZWQuCiA8IS0tIC93aWxsIC0tPgo+IDwhLS0gd2lsbC8xIGtlZXAgLS0+Cj4gUXVvdGVkLgo+IDwhLS0gL3dpbGwgLS0+Cgk8IS0tIHdpbGwvMSBrZWVwIC0tPgoJSW5kZW50ZWQuCgk8IS0tIC93aWxsIC0tPgo=",
+        "removed": 0
+      }
+    },
+    {
+      "id": "STRIP-COMPANION-COMMENTS-STAY",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsaW5nbmVzcyBtYXR0ZXJzIC0tPgo8IS0tIFJlbWluZGVyOiBwcmVzZXJ2ZSBjb3Vuc2VsJ3Mgd29yZGluZy4gLS0+CjwhLS0gd2lsbC8xIGtlZXAgLS0+CkEKPCEtLSAvd2lsbCAtLT4KPCEtLSBLZWVwIHRoZSBzb3VyY2UgcHJpdmF0ZS4gLS0+Cg==",
+      "expect": {
+        "docBase64": "PCEtLSB3aWxsaW5nbmVzcyBtYXR0ZXJzIC0tPgo8IS0tIFJlbWluZGVyOiBwcmVzZXJ2ZSBjb3Vuc2VsJ3Mgd29yZGluZy4gLS0+CkEKPCEtLSBLZWVwIHRoZSBzb3VyY2UgcHJpdmF0ZS4gLS0+Cg==",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-FENCED-RECOGNIZED-MARKERS",
+      "kind": "strip",
+      "docBase64": "YGBgdGV4dAo8IS0tIHdpbGwvMSBrZWVwIC0tPgpBCjwhLS0gL3dpbGwgLS0+CmBgYAo=",
+      "expect": {
+        "docBase64": "YGBgdGV4dApBCmBgYAo=",
+        "removed": 2
+      }
+    },
+    {
+      "id": "STRIP-UNPAIRED-OPENER",
+      "kind": "strip",
+      "docBase64": "QmVmb3JlLgo8IS0tIHdpbGwvMSBrZWVwIC0tPgpBCg==",
+      "expect": {
+        "error": "faulted_document"
+      }
+    },
+    {
+      "id": "STRIP-UNPAIRED-CLOSER",
+      "kind": "strip",
+      "docBase64": "QmVmb3JlLgo8IS0tIC93aWxsIC0tPgpBZnRlci4K",
+      "expect": {
+        "error": "faulted_document"
+      }
+    },
+    {
+      "id": "STRIP-MALFORMED",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "error": "faulted_document"
+      }
+    },
+    {
+      "id": "STRIP-UNSPACED-NEAR-MISS",
+      "kind": "strip",
+      "docBase64": "PCEtLXdpbGwvMSBrZWVwIC0tPgpBCjwhLS0vd2lsbCAtLT4K",
+      "expect": {
+        "error": "faulted_document"
+      }
+    },
+    {
+      "id": "STRIP-UNKNOWN-VERSION",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzIga2VlcCAtLT4KQQo8IS0tIC93aWxsIC0tPgo=",
+      "expect": {
+        "error": "faulted_document"
+      }
+    },
+    {
+      "id": "STRIP-UNKNOWN-LAW",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEgZnJlZXplIC0tPgpBCjwhLS0gL3dpbGwgLS0+Cg==",
+      "expect": {
+        "error": "faulted_document"
+      }
+    },
+    {
+      "id": "STRIP-INVALID-UTF8",
+      "kind": "strip",
+      "docBase64": "QmVmb3JlLgr/CkFmdGVyLgo=",
+      "expect": {
+        "error": "faulted_document"
+      }
+    },
+    {
+      "id": "STRIP-ATOMIC-LATE-FAULT",
+      "kind": "strip",
+      "docBase64": "QmVmb3JlLgo8IS0tIHdpbGwvMSBrZWVwIC0tPgpBCjwhLS0gL3dpbGwgLS0+Ck1pZGRsZS4KPCEtLSB3aWxsLzEga2VlcCAtLT4KQgo=",
+      "expect": {
+        "error": "faulted_document"
+      }
+    },
+    {
+      "id": "STRIP-ATOMIC-LATE-INVALID-UTF8",
+      "kind": "strip",
+      "docBase64": "PCEtLSB3aWxsLzEga2VlcCAtLT4KQQo8IS0tIC93aWxsIC0tPgr/",
+      "expect": {
+        "error": "faulted_document"
+      }
+    }
   ]
 }

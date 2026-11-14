@@ -11,6 +11,8 @@ jobs:
         with:
           node-version: 22.23.4
       - run: node will.mjs check vectors.json
+      - name: Reference tools
+        run: node --test --test-concurrency=1 *.test.mjs
       - name: README has no live marker
         run: |
           node --input-type=module -e '
@@ -19,6 +21,7 @@ jobs:
             const result = parse(readFileSync("README.md"));
             if (result.regions.length || result.faults.length) process.exit(1);'
   python:
+    name: Python Markdown conformance
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -28,6 +31,7 @@ jobs:
       - run: python hosts/python/will.py check vectors.json
       - run: python hosts/check-adapter.py python hosts/python/will.py
   go:
+    name: Go Markdown conformance
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
